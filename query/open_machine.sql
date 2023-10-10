@@ -9,7 +9,8 @@ SELECT
 	dbo.PO_Detail.Due_Date,
 	dbo.PO_Detail.Order_Quantity AS PO_Order_Qty,
 	dbo.Source.Act_Qty,
-	dbo.Source.Last_Recv_Date 
+	dbo.Source.Last_Recv_Date,
+	dbo.Job.Last_Updated
 FROM
 	dbo.Job
 	LEFT JOIN (
@@ -31,6 +32,6 @@ WHERE
 		OR dbo.Job_Operation.Vendor = 'KAGER' 
 	) 
 	AND source.act_qty < po_detail.order_quantity 
-	AND CAST( dbo.SO_Detail.Last_Updated AS DATE ) = CAST( GETDATE () - 1 AS DATE ) 
+	AND CAST( dbo.Job.Last_Updated AS DATE ) = CAST( GETDATE () - 1 AS DATE ) 
 ORDER BY
 	dbo.Job.Job;

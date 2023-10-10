@@ -20,7 +20,6 @@ module.exports.getItems = async (board_id) => {
                     title
                     type
                     text
-                    value
                 }
             }
         }
@@ -34,7 +33,7 @@ module.exports.getItems = async (board_id) => {
         for (const col of item.column_values) {
             item[col.id] = {
                 type: col.type,
-                value: (col.type === 'date' ? col.text : col.value)
+                value: col.text
             };
         }
     }

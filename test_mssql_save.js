@@ -1,6 +1,6 @@
 // import modules
 const fs = require('fs');
-const mssql_query = require('./mssql_query');
+const mssql_query = require('./modules/mssql_query');
 
 (async () => {
     // read mssql data

@@ -1,13 +1,13 @@
 SELECT
 	Job.Job,
-	-- Job.Part_Number,
-	-- PO_Header.Vendor,
-	-- PO_Detail.PO,
-	-- PO_Detail.Due_Date,
-	-- ( Job.Make_Quantity + Job.Pick_Quantity ) AS Job_Qty,
+	MAX(Job.Part_Number),
+	MAX(PO_Header.Vendor),
+	MAX(PO_Detail.PO),
+	MAX(PO_Detail.Due_Date),
+	MAX( Job.Make_Quantity + Job.Pick_Quantity ) AS Job_Qty,
 	MAX(PO_Detail.Order_Quantity) AS Order_Quantity,
 	SUM(Material_Req.Act_Qty) AS Act_Qty,
-	Job.Last_Updated
+	MAX(Job.Last_Updated)
 FROM
 	PRODUCTION.dbo.Job Job
 	INNER JOIN PRODUCTION.dbo.Material_Req Material_Req ON Job.Job = Material_Req.Job

@@ -9,6 +9,7 @@ module.exports.addNewOpenJobData = async (board_id, logger) => {
     // get items from monday.com
     const items = await monday.getItems(board_id);
     if (!items) {
+        logger.info('getItems failed');
         return;
     }
     logger.info(`${items.length} items`);

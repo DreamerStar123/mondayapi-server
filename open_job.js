@@ -34,6 +34,9 @@ module.exports.addNewOpenJobData = async (board_id, logger) => {
     let res = analysis.analyzeData(items, recordset, fieldMatch);
     logger.info(`${res.validItemIds.length} matching items`);
 
+    console.log(items[items.length - 1]);
+    console.log(recordset[0]);
+
     // add new items
     let newCount = 0;
     for (let i = 0; i < recordset.length; i++) {

@@ -30,9 +30,6 @@ module.exports.addNewOpenJobData = async (board_id, logger) => {
         ["numbers7", "Open_Qty"],
     ];
 
-    console.log(analysis.compareFields(items[items.length - 1], recordset[0], fieldMatch));
-
-    return;
     let res = analysis.analyzeData(items, recordset, fieldMatch);
     logger.info(`${res.validItemIds.length} matching items`);
 

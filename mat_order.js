@@ -29,16 +29,45 @@ module.exports.addNewMatOrderData = async (board_id, logger) => {
         ["act_qty", "Act_Qty"],
     ];
 
-    // analysis.compareFields(items[0], recordset[0], fieldMatch);
-    let res = analysis.analyzeData(items, recordset, fieldMatch);
-    logger.info(`${res.validItemIds.length} matching items`);
+    let updatedCount = 0;
+    let deletedCount = 0;
+    for (const item of items) {
+        let index = recordset.findIndex(record => {
+            let name = item.name;
+            let pos = name.indexOf("(");
+            if (pos !== -1)
+                name = name.substr(0, pos).trim();
+            return (name === record.Job);
+        });
+        const record = recordset[index];
+        if (index !== -1)
+            recordset.splice(index, 1);
+        if (record && !analysis.compareFields(item, record, fieldMatch)) {
+            const column_values = {
+                vendor: record.Vendor,
+                po: record.PO,
+                due_date: record.Due_Date,
+                job_qty: record.Job_Qty,
+                order_qty: record.Order_Quantity,
+                act_qty: record.Act_Qty,
+            };
+            // console.log(item, record);
+            if (record.Order_Quantity > record.Act_Qty) {
+                await monday.change_multiple_column_values(item.id, board_id, column_values);
+                updatedCount++;
+            } else {
+                await monday.delete_item(item.id);
+                deletedCount++;
+            }
+        }
+    }
+    logger.info(`${updatedCount} items updated`);
+    logger.info(`${deletedCount} items deleted`);
 
     // add new items
     let newCount = 0;
-    for (let i = 0; i < recordset.length; i++) {
-        const record = recordset[i];
-        const flag = res.recordFlags[i];
-        if (!flag && record.Order_Quantity > record.Act_Qty) {
+    for (const record of recordset) {
+        if (record.Order_Quantity > record.Act_Qty) {
             const item_name = `${record.Job} (${record.Part_Number})`;
             const column_values = {
                 vendor: record.Vendor,
@@ -56,12 +85,4 @@ module.exports.addNewMatOrderData = async (board_id, logger) => {
         }
     }
     logger.info(`${newCount} items created`);
-
-    let delCount = 0;
-    for (const item of items) {
-        if (item.order_qty.value <= item.act_qty.value) {
-            await monday.delete_item(item.id);
-        }
-    }
-    logger.info(`${delCount} items deleted`);
 }

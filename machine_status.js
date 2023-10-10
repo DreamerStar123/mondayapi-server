@@ -20,7 +20,7 @@ module.exports.updateMachineStatus = async (board_id, logger) => {
     logger.info(`${recordset.length} records`);
 
     // update items
-    const filedMatch = [
+    const fieldMatch = [
         ["vendor", "Vendor"],
         ["po", "PO"],
         ["due_date", "Due_Date"],
@@ -41,7 +41,7 @@ module.exports.updateMachineStatus = async (board_id, logger) => {
                 name = name.substr(0, pos).trim();
             return (name === record.Job);
         });
-        if (record && !analysis.compareFields(item, record, filedMatch)) {
+        if (record && !analysis.compareFields(item, record, fieldMatch)) {
             const column_values = {
                 vendor: record.Vendor,
                 po: record.PO,
@@ -54,7 +54,7 @@ module.exports.updateMachineStatus = async (board_id, logger) => {
                 so_shipped_qty: record.Shipped_Qty,
                 so_open_qty: record.Open_Qty
             };
-            console.log(item, record);
+            // console.log(item, record);
             await monday.change_multiple_column_values(item.id, board_id, column_values);
             updatedCount++;
         }

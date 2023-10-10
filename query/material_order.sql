@@ -21,7 +21,6 @@ WHERE
 	AND PO_Detail.PO_Type = 0 
 	-- AND CAST(Job.Last_Updated AS DATE) = CAST(GETDATE() - 1 AS DATE)
 ORDER BY
+	Job.Job,
 	PO_Detail.PO,
 	PO_Detail.Line
-GROUP BY
-	Job.Job

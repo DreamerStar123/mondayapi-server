@@ -32,27 +32,40 @@ module.exports.addNewMatOrderData = async (board_id, logger) => {
     let updatedCount = 0;
     let deletedCount = 0;
     for (const item of items) {
-        let index = recordset.findIndex(record => {
-            let name = item.name;
-            let pos = name.indexOf("(");
-            if (pos !== -1)
-                name = name.substr(0, pos).trim();
-            return (name === record.Job);
-        });
-        const record = recordset[index];
-        if (index !== -1)
+        let row = {};
+        while (1) {
+            let index = recordset.find(record => {
+                let name = item.name;
+                let pos = name.indexOf("(");
+                if (pos !== -1)
+                    name = name.substr(0, pos).trim();
+                return (name === record.Job);
+            });
+            const record = recordset[index];
+            if (index === -1)
+                break;
+            row = {
+                vendor: row.vendor || record.Vendor,
+                po: row.po || record.PO,
+                due_date: row.due_date || record.Due_Date,
+                job_qty: row.job_qty || record.Job_Qty,
+                order_qty: row.Order_Quantity || record.Order_Quantity,
+                act_qty: (row.act_qty || 0) + record.Act_Qty,
+            }
             recordset.splice(index, 1);
-        if (record && !analysis.compareFields(item, record, fieldMatch)) {
+        }
+
+        if (row != {} && !analysis.compareFields(item, row, fieldMatch)) {
             const column_values = {
-                vendor: record.Vendor,
-                po: record.PO,
-                due_date: record.Due_Date,
-                job_qty: record.Job_Qty,
-                order_qty: record.Order_Quantity,
-                act_qty: record.Act_Qty,
+                vendor: row.Vendor,
+                po: row.PO,
+                due_date: row.Due_Date,
+                job_qty: row.Job_Qty,
+                order_qty: row.Order_Quantity,
+                act_qty: row.Act_Qty,
             };
-            // console.log(item, record);
-            if (record.Order_Quantity > record.Act_Qty) {
+            // console.log(item, row);
+            if (row.Order_Quantity > row.Act_Qty) {
                 await monday.change_multiple_column_values(item.id, board_id, column_values);
                 updatedCount++;
             } else {

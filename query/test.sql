@@ -5,8 +5,8 @@ SELECT
 	PO_Detail.PO,
 	PO_Detail.Due_Date,
 	( Job.Make_Quantity + Job.Pick_Quantity ) AS Job_Qty,
-	MAX(PO_Detail.Order_Quantity) AS Order_Quantity,
-	SUM(Material_Req.Act_Qty) AS Act_Qty,
+	MAX(PO_Detail.Order_Quantity),
+	SUM(Material_Req.Act_Qty),
 	Job.Last_Updated
 FROM
 	PRODUCTION.dbo.Job Job
@@ -20,5 +20,7 @@ WHERE
 	AND Job.Job NOT LIKE 'T%' 
 	AND PO_Detail.PO_Type = 0 
 	-- AND CAST(Job.Last_Updated AS DATE) = CAST(GETDATE() - 1 AS DATE)
-GROUP BY
-	Job.Job
+ORDER BY
+	Job.Job,
+	PO_Detail.PO,
+	PO_Detail.Line

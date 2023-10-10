@@ -16,8 +16,8 @@ const logger = winston.createLogger({
     const rawMaterialOrdersBoardId = 5293869955;
     const openMachineBoardId = 5293870025;
 
-    await mat_order.addNewMatOrderData(rawMaterialOrdersBoardId, logger);
-    // await open_machine.addNewOpenMachineData(openMachineBoardId, logger);
+    // await mat_order.addNewMatOrderData(rawMaterialOrdersBoardId, logger);
+    await open_machine.addNewOpenMachineData(openMachineBoardId, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

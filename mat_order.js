@@ -34,16 +34,16 @@ module.exports.addNewMatOrderData = async (board_id, logger) => {
     for (const item of items) {
         let row = {};
         while (1) {
-            let index = recordset.find(record => {
+            let index = recordset.findIndex(record => {
                 let name = item.name;
                 let pos = name.indexOf("(");
                 if (pos !== -1)
                     name = name.substr(0, pos).trim();
                 return (name === record.Job);
             });
-            const record = recordset[index];
             if (index === -1)
                 break;
+            const record = recordset[index];
             row = {
                 vendor: row.vendor || record.Vendor,
                 po: row.po || record.PO,

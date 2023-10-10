@@ -5,7 +5,9 @@ module.exports.compareFields = (item, record, fieldMatch) => {
         let recordField = record[fieldPair[1]] || '';
         // compare field value
         if (itemField.type === "date") {
-            let d = new Date(recordField).toISOString().substr(0, 10);
+            let d = new Date(recordField);
+            if (d != 'Invalid Date')
+                d = d.toISOString().substr(0, 10);
             if (itemField.value != d) {
                 // console.log(`${fieldPair[0]}, ${fieldPair[1]}: ${itemField.value} != ${d}`);
                 return false;

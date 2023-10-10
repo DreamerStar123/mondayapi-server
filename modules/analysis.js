@@ -6,9 +6,12 @@ module.exports.compareFields = (item, record, fieldMatch) => {
         // compare field value
         if (itemField.type === "date") {
             let d = new Date(recordField).toISOString().substr(0, 10);
-            if (itemField.value != d)
+            if (itemField.value != d) {
+                console.log(`${itemField.value} != ${d}`);
                 return false;
+            }
         } else if (itemField.value != recordField) {
+            console.log(`${itemField.value} != ${recordField}`);
             return false;
         }
     }

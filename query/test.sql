@@ -1,10 +1,10 @@
 SELECT
 	Job.Job,
-	Job.Part_Number,
-	PO_Header.Vendor,
-	PO_Detail.PO,
-	PO_Detail.Due_Date,
-	( Job.Make_Quantity + Job.Pick_Quantity ) AS Job_Qty,
+	-- Job.Part_Number,
+	-- PO_Header.Vendor,
+	-- PO_Detail.PO,
+	-- PO_Detail.Due_Date,
+	-- ( Job.Make_Quantity + Job.Pick_Quantity ) AS Job_Qty,
 	MAX(PO_Detail.Order_Quantity) AS Order_Quantity,
 	SUM(Material_Req.Act_Qty) AS Act_Qty,
 	Job.Last_Updated

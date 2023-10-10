@@ -20,8 +20,5 @@ WHERE
 	AND Job.Job NOT LIKE 'T%' 
 	AND PO_Detail.PO_Type = 0 
 	-- AND CAST(Job.Last_Updated AS DATE) = CAST(GETDATE() - 1 AS DATE)
-ORDER BY
-	PO_Detail.PO,
-	PO_Detail.Line
 GROUP BY
 	Job.Job

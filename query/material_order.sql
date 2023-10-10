@@ -5,8 +5,8 @@ SELECT
 	PO_Detail.PO,
 	PO_Detail.Due_Date,
 	( Job.Make_Quantity + Job.Pick_Quantity ) AS Job_Qty,
-	PO_Detail.Order_Quantity,
-	Material_Req.Act_Qty,
+	MAX(PO_Detail.Order_Quantity),
+	SUM(Material_Req.Act_Qty),
 	Job.Last_Updated
 FROM
 	PRODUCTION.dbo.Job Job
@@ -24,3 +24,5 @@ ORDER BY
 	Job.Job,
 	PO_Detail.PO,
 	PO_Detail.Line
+GROUP BY
+	Job.Job

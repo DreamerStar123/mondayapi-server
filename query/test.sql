@@ -5,11 +5,9 @@ SELECT
 	PO_Detail.PO,
 	PO_Detail.Due_Date,
 	( Job.Make_Quantity + Job.Pick_Quantity ) AS Job_Qty,
-	PO_Detail.Order_Quantity,
-	Material_Req.Act_Qty,
-	Job.Last_Updated,
-	Material_Req.Type,
-	PO_Detail.PO_Type
+	MAX(PO_Detail.Order_Quantity),
+	SUM(Material_Req.Act_Qty),
+	Job.Last_Updated
 FROM
 	PRODUCTION.dbo.Job Job
 	INNER JOIN PRODUCTION.dbo.Material_Req Material_Req ON Job.Job = Material_Req.Job
@@ -20,9 +18,11 @@ WHERE
 	Job.Status = 'Active' 
 	AND Material_Req.Type = 'R' 
 	AND Job.Job NOT LIKE 'T%' 
--- 	AND PO_Detail.PO_Type = 0 
+	AND PO_Detail.PO_Type = 0 
 	-- AND CAST(Job.Last_Updated AS DATE) = CAST(GETDATE() - 1 AS DATE)
 ORDER BY
 	Job.Job,
 	PO_Detail.PO,
 	PO_Detail.Line
+GROUP BY
+	Job.Job

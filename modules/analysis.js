@@ -8,7 +8,7 @@ module.exports.compareFields = (item, record, fieldMatch) => {
             let d = new Date(recordField).toISOString().substr(0, 10);
             if (itemField.value != d)
                 return false;
-        } else if (!(itemField.value === null && recordField === 0) && itemField.value != recordField) {
+        } else if (!(!itemField.value && recordField === 0) && itemField.value != recordField) {
             return false;
         }
     }

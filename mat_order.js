@@ -15,7 +15,7 @@ module.exports.addNewMatOrderData = async (board_id, logger) => {
 
     // read mssql data
     const query = fs.readFileSync('query/material_order.sql', 'utf-8');
-    const recordset = await mssql_query.getResultFromSQLServer(query);
+    let recordset = await mssql_query.getResultFromSQLServer(query);
     // let recordset = JSON.parse(fs.readFileSync('data/material_order.json', 'utf8'));
     logger.info(`${recordset.length} records`);
 

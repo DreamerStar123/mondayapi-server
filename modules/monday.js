@@ -52,8 +52,15 @@ module.exports.delete_item = async (item_id) => {
     return await safeExecQuery(query);
 }
 
-function isDate(variable) {
-    return typeof variable === 'object' && variable instanceof Date;
+function validateDate(value) {
+    if (typeof value === 'object' && value instanceof Date) {
+        return value.toISOString().substr(0, 10);
+    }
+    const pattern = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}).(\d{3})(Z|[+-]\d{2}:\d{2})$/;
+    if (typeof value === 'string' && pattern.test(value)) {
+        return value.substr(0, 10);
+    }
+    return value;
 }
 
 module.exports.create_item = async (board_id, item_name, column_values, group_id = null) => {
@@ -64,8 +71,7 @@ module.exports.create_item = async (board_id, item_name, column_values, group_id
         if (colvals !== "")
             colvals += ', ';
         let value = column_values[id] || '';
-        if (isDate(value))
-            value = value.toISOString().substr(0, 10);
+        value = validateDate(value);
         colvals += `\\"${id}\\":\\"${value}\\"`;
     }
     const query = `
@@ -122,8 +128,7 @@ module.exports.change_multiple_column_values = async (item_id, board_id, column_
         if (colvals !== "")
             colvals += ', ';
         let value = column_values[id] || '';
-        if (isDate(value))
-            value = value.toISOString().substr(0, 10);
+        value = validateDate(value);
         colvals += `\\"${id}\\":\\"${value}\\"`;
     }
     query = `

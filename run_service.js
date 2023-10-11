@@ -1,5 +1,8 @@
 // import modules
-const newjob = require('./newjob');
+const open_job = require('./open_job');
+const machine_status = require('./machine_status');
+const mat_order = require('./mat_order');
+const open_machine = require('./open_machine');
 var cron = require('node-cron');
 const winston = require("winston");
 
@@ -15,7 +18,14 @@ cron.schedule('0 0 * * *', async () => {
 
     const openJobBoardId = 5249505765;
     const noJobBoardId = 5252735219;
-    await newjob.addNewOpenJobData(openJobBoardId, logger);
+    const machineStatusBoardId = 5240959201;
+    const rawMaterialOrdersBoardId = 5293869955;
+    const openMachineBoardId = 5293870025;
+
+    await open_job.addNewOpenJobData(openJobBoardId, logger);
+    await machine_status.updateMachineStatus(machineStatusBoardId, logger);
+    await mat_order.addNewMatOrderData(rawMaterialOrdersBoardId, logger);
+    await open_machine.addNewOpenMachineData(openMachineBoardId, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

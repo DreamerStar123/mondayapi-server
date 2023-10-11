@@ -5,7 +5,7 @@ const analysis = require('./modules/analysis');
 const mssql_query = require('./modules/mssql_query');
 
 module.exports.addNewOpenMachineData = async (board_id, logger) => {
-    logger.info(`addNewOpenMachineData(${board_id})`);
+    logger.info(`=====> addNewOpenMachineData(${board_id})`);
     // get items from monday.com
     const items = await monday.getItems(board_id);
     if (!items) {

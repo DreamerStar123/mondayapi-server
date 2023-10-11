@@ -1,6 +1,8 @@
 // import modules
 const open_job = require('./open_job');
 const machine_status = require('./machine_status');
+const mat_order = require('./mat_order');
+const open_machine = require('./open_machine');
 const winston = require("winston");
 
 const logger = winston.createLogger({

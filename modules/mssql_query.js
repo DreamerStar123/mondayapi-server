@@ -1,4 +1,6 @@
+const axios = require('axios');
 const sql = require('mssql');
+
 const config = {
     user: 'monday.com',
     password: 'YCLEPT0surpass1peruvian-heirloom8suspend',
@@ -19,14 +21,34 @@ module.exports.getResultFromSQLServer = async (query) => {
 
     console.log('Connected to SQL Server');
 
+    let result = [];
     try {
-        var result = (await sql.query(query)).recordset;
+        result = (await sql.query(query)).recordset;
     } catch (error) {
         console.error('Error executing query:', error);
-        return [];
     }
 
     sql.close();
 
+    return result;
+}
+
+module.exports.getResultFromProxyServer = async (query) => {
+    const url = 'http://184.168.31.101:3000';
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
+    let result = [];
+    try {
+        const res = await axios.post('http://184.168.31.101:3000', {
+            query
+        }, {
+            headers
+        });
+        result = res.data;
+    } catch (err) {
+        console.log(err);
+    }
     return result;
 }

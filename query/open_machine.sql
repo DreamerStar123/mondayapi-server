@@ -32,6 +32,6 @@ WHERE
 		OR dbo.Job_Operation.Vendor = 'KAGER' 
 	) 
 	AND source.act_qty < po_detail.order_quantity 
-	AND CAST( dbo.Job.Last_Updated AS DATE ) = CAST( GETDATE () - 1 AS DATE ) 
+	-- AND CAST( dbo.Job.Last_Updated AS DATE ) = CAST( GETDATE () - 1 AS DATE ) 
 ORDER BY
 	dbo.Job.Job

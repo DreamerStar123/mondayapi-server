@@ -18,7 +18,7 @@ WHERE
 	Job.Status = 'Active' 
 	AND Material_Req.Type = 'R' 
 	AND Job.Job NOT LIKE 'T%' 
-	-- AND PO_Detail.PO_Type = 0 
+	AND PO_Detail.PO_Type = 0 
 	-- AND CAST(Job.Last_Updated AS DATE) = CAST(GETDATE() - 1 AS DATE)
 ORDER BY
 	Job.Job,

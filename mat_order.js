@@ -4,7 +4,7 @@ const monday = require('./modules/monday');
 const analysis = require('./modules/analysis');
 const mssql_query = require('./modules/mssql_query');
 
-module.exports.addNewMatOrderData = async (board_id, logger) => {
+module.exports.addNewMatOrderData = async (board_id, proxy, logger) => {
     logger.info(`=====> addNewMatOrderData(${board_id})`);
     // get items from monday.com
     const items = await monday.getItems(board_id);
@@ -15,13 +15,13 @@ module.exports.addNewMatOrderData = async (board_id, logger) => {
 
     // read mssql data
     const query = fs.readFileSync('query/material_order.sql', 'utf-8');
-    // let recordset = await mssql_query.getResultFromSQLServer(query);
-    let recordset = await mssql_query.getResultFromProxyServer(query);
+    let recordset;
+    if (proxy)
+        recordset = await mssql_query.getResultFromProxyServer(query);
+    else
+        recordset = await mssql_query.getResultFromSQLServer(query);
     // let recordset = JSON.parse(fs.readFileSync('data/material_order.json', 'utf8'));
     logger.info(`${recordset.length} records`);
-
-    fs.writeFileSync('data/material_order.json', JSON.stringify(recordset));
-    return;
 
     // group by job
     let groupRecords = [];

@@ -4,7 +4,7 @@ const monday = require('./modules/monday');
 const analysis = require('./modules/analysis');
 const mssql_query = require('./modules/mssql_query');
 
-module.exports.addNewOpenMachineData = async (board_id, logger) => {
+module.exports.addNewOpenMachineData = async (board_id, proxy, logger) => {
     logger.info(`=====> addNewOpenMachineData(${board_id})`);
     // get items from monday.com
     const items = await monday.getItems(board_id);
@@ -15,7 +15,11 @@ module.exports.addNewOpenMachineData = async (board_id, logger) => {
 
     // read mssql data
     const query = fs.readFileSync('query/open_machine.sql', 'utf-8');
-    const recordset = await mssql_query.getResultFromSQLServer(query);
+    let recordset;
+    if (proxy)
+        recordset = await mssql_query.getResultFromProxyServer(query);
+    else
+        recordset = await mssql_query.getResultFromSQLServer(query);
     // const recordset = JSON.parse(fs.readFileSync('query/open_job-2.json', 'utf8'));
     logger.info(`${recordset.length} records`);
 

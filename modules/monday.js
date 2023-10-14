@@ -46,6 +46,7 @@ module.exports.delete_item = async (item_id) => {
         mutation {
             delete_item(item_id: ${item_id}) {
                 id
+                name
             }
         }
     `;

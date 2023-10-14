@@ -36,7 +36,9 @@ module.exports.updateMachineStatus = async (board_id, proxy, logger) => {
         ["so_shipped_qty", "Shipped_Qty"],
         ["so_open_qty", "Open_Qty"],
     ];
+
     let updatedCount = 0;
+    let matchCount = 0;
     for (const item of items) {
         let record = recordset.find(record => {
             let name = item.name;
@@ -45,23 +47,26 @@ module.exports.updateMachineStatus = async (board_id, proxy, logger) => {
                 name = name.substr(0, pos).trim();
             return (name === record.Job);
         });
-        if (record && !analysis.compareFields(item, record, fieldMatch)) {
-            const column_values = {
-                vendor: record.Vendor,
-                po: record.PO,
-                due_date: record.Due_Date,
-                order_qty: record.Order_Quantity,
-                act_qty: record.Act_Qty,
-                type: record.Type,
-                job_qty: record.Job_Qty,
-                so_order_qty: record.Order_Qty,
-                so_shipped_qty: record.Shipped_Qty,
-                so_open_qty: record.Open_Qty
-            };
-            // console.log(item, record);
-            await monday.change_multiple_column_values(item.id, board_id, column_values);
-            updatedCount++;
+        if (record) {
+            matchCount++;
+            if (!analysis.compareFields(item, record, fieldMatch)) {
+                const column_values = {
+                    vendor: record.Vendor,
+                    po: record.PO,
+                    due_date: record.Due_Date,
+                    order_qty: record.Order_Quantity,
+                    act_qty: record.Act_Qty,
+                    type: record.Type,
+                    job_qty: record.Job_Qty,
+                    so_order_qty: record.Order_Qty,
+                    so_shipped_qty: record.Shipped_Qty,
+                    so_open_qty: record.Open_Qty
+                };
+                // console.log(item, record);
+                await monday.change_multiple_column_values(item.id, board_id, column_values);
+                updatedCount++;
+            }
         }
     }
-    logger.info(`${updatedCount} items updated`);
+    logger.info(`${updatedCount}/${matchCount} items updated`);
 }

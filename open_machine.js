@@ -4,8 +4,8 @@ const monday = require('./modules/monday');
 const analysis = require('./modules/analysis');
 const mssql_query = require('./modules/mssql_query');
 
-module.exports.addNewOpenMachineData = async (board_id, proxy, logger) => {
-    logger.info(`=====> addNewOpenMachineData(${board_id})`);
+module.exports.updateOpenMachine = async (board_id, proxy, logger) => {
+    logger.info(`=====> updateOpenMachine(${board_id})`);
     // get items from monday.com
     const items = await monday.getItems(board_id);
     if (!items) {
@@ -28,7 +28,6 @@ module.exports.addNewOpenMachineData = async (board_id, proxy, logger) => {
         ["vendor", "Vendor"],
         ["job_order_qty", "Job_Order_Qty"],
         ["opr_service", "Operation_Service"],
-        ["mat_req", "Material_Req"],
         ["po", "PO"],
         ["due_date", "Due_Date"],
         ["po_order_qty", "PO_Order_Qty"],
@@ -37,6 +36,8 @@ module.exports.addNewOpenMachineData = async (board_id, proxy, logger) => {
     ];
 
     let updatedCount = 0;
+    let deletedCount = 0;
+    let matchCount = 0;
     for (const item of items) {
         let index = recordset.findIndex(record => {
             let name = item.name;
@@ -46,44 +47,54 @@ module.exports.addNewOpenMachineData = async (board_id, proxy, logger) => {
             return (name === record.Job);
         });
         const record = recordset[index];
-        if (index !== -1)
+        if (index !== -1) {
             recordset.splice(index, 1);
-        if (record && !analysis.compareFields(item, record, fieldMatch)) {
+            matchCount++;
+        }
+        if (record) {
+            if (record.PO_Order_Qty > record.Act_Qty) {
+                if (!analysis.compareFields(item, record, fieldMatch)) {
+                    const column_values = {
+                        vendor: record.Vendor,
+                        job_order_qty: record.Job_Order_Qty,
+                        opr_service: record.Operation_Service,
+                        po: record.PO,
+                        due_date: record.Due_Date,
+                        po_order_qty: record.PO_Order_Qty,
+                        act_qty: record.Act_Qty,
+                        last_recv_date: record.Last_Recv_Date,
+                    };
+                    // console.log(item, record);
+                    await monday.change_multiple_column_values(item.id, board_id, column_values);
+                    updatedCount++;
+                }
+            } else {
+                await monday.delete_item(item.id);
+                deletedCount++;
+            }
+        }
+    }
+    logger.info(`${updatedCount}/${matchCount} items updated`);
+    logger.info(`${deletedCount}/${matchCount} items deleted`);
+
+    // add new items
+    let newCount = 0;
+    for (const record of recordset) {
+        if (record.PO_Order_Qty > record.Act_Qty) {
+            const item_name = `${record.Job} (${record.Part_Number})`;
             const column_values = {
                 vendor: record.Vendor,
                 job_order_qty: record.Job_Order_Qty,
                 opr_service: record.Operation_Service,
-                mat_req: record.Material_Req,
                 po: record.PO,
                 due_date: record.Due_Date,
                 po_order_qty: record.PO_Order_Qty,
                 act_qty: record.Act_Qty,
                 last_recv_date: record.Last_Recv_Date,
             };
-            // console.log(item, record);
-            await monday.change_multiple_column_values(item.id, board_id, column_values);
-            updatedCount++;
+            await monday.create_item(board_id, item_name, column_values);
+            newCount++;
         }
     }
-    logger.info(`${updatedCount} items updated`);
-
-    // add new items
-    let newCount = 0;
-    for (const record of recordset) {
-        const item_name = `${record.Job} (${record.Part_Number})`;
-        const column_values = {
-            vendor: record.Vendor,
-            job_order_qty: record.Job_Order_Qty,
-            opr_service: record.Operation_Service,
-            mat_req: record.Material_Req,
-            po: record.PO,
-            due_date: record.Due_Date,
-            po_order_qty: record.PO_Order_Qty,
-            act_qty: record.Act_Qty,
-            last_recv_date: record.Last_Recv_Date,
-        };
-        await monday.create_item(board_id, item_name, column_values);
-        newCount++;
-    }
-    logger.info(`${newCount} items created`);
+    logger.info(`${newCount}/${recordset.length} items created`);
 }

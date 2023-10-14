@@ -4,8 +4,8 @@ const monday = require('./modules/monday');
 const analysis = require('./modules/analysis');
 const mssql_query = require('./modules/mssql_query');
 
-module.exports.addNewMatOrderData = async (board_id, proxy, logger) => {
-    logger.info(`=====> addNewMatOrderData(${board_id})`);
+module.exports.updateMatOrder = async (board_id, proxy, logger) => {
+    logger.info(`=====> updateMatOrder(${board_id})`);
     // get items from monday.com
     const items = await monday.getItems(board_id);
     if (!items) {
@@ -53,6 +53,7 @@ module.exports.addNewMatOrderData = async (board_id, proxy, logger) => {
 
     let updatedCount = 0;
     let deletedCount = 0;
+    let matchCount = 0;
     for (const item of items) {
         let index = groupRecords.findIndex(record => {
             let name = item.name;
@@ -62,29 +63,33 @@ module.exports.addNewMatOrderData = async (board_id, proxy, logger) => {
             return (name === record.Job);
         });
         const record = groupRecords[index];
-        if (index !== -1)
+        if (index !== -1) {
             groupRecords.splice(index, 1);
-        if (record && !analysis.compareFields(item, record, fieldMatch)) {
+            matchCount++;
+        }
+        if (record) {
             // console.log(item, record);
             if (record.Order_Quantity > record.Act_Qty) {
-                const column_values = {
-                    vendor: record.Vendor,
-                    po: record.PO,
-                    due_date: record.Due_Date,
-                    job_qty: record.Job_Qty,
-                    order_qty: record.Order_Quantity,
-                    act_qty: record.Act_Qty,
-                };
-                await monday.change_multiple_column_values(item.id, board_id, column_values);
-                updatedCount++;
+                if (!analysis.compareFields(item, record, fieldMatch)) {
+                    const column_values = {
+                        vendor: record.Vendor,
+                        po: record.PO,
+                        due_date: record.Due_Date,
+                        job_qty: record.Job_Qty,
+                        order_qty: record.Order_Quantity,
+                        act_qty: record.Act_Qty,
+                    };
+                    await monday.change_multiple_column_values(item.id, board_id, column_values);
+                    updatedCount++;
+                }
             } else {
                 await monday.delete_item(item.id);
                 deletedCount++;
             }
         }
     }
-    logger.info(`${updatedCount} items updated`);
-    logger.info(`${deletedCount} items deleted`);
+    logger.info(`${updatedCount}/${matchCount} items updated`);
+    logger.info(`${deletedCount}/${matchCount} items deleted`);
 
     // add new items
     let newCount = 0;
@@ -106,5 +111,5 @@ module.exports.addNewMatOrderData = async (board_id, proxy, logger) => {
             newCount++;
         }
     }
-    logger.info(`${newCount} items created`);
+    logger.info(`${newCount}/${groupRecords.length} items created`);
 }

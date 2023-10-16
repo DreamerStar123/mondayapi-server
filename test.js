@@ -20,10 +20,16 @@ const logger = winston.createLogger({
     const machineStatusBoardId = 5240959201;
     const rawMaterialOrdersBoardId = 5293869955;
     const openMachineBoardId = 5293870025;
+
+    // const openJobBoardId = 1293185486;
+    // const machineStatusBoardId = 1293185622;
+    // const rawMaterialOrdersBoardId = 1293185685;
+    // const openMachineBoardId = 1293186060;
+
     const proxy = true;
 
-    // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
-    // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
+    await open_job.updateOpenJob(openJobBoardId, proxy, logger);
+    await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
     await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
 

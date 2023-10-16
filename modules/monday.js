@@ -4,7 +4,8 @@ require('dotenv').config();
 
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': (process.env.TEST_MODE === "true" ? process.env.TEST_API_KEY : process.env.MONDAY_API_KEY),
+    'Authorization': process.env.TEST_API_KEY,
+    // 'Authorization': process.env.MONDAY_API_KEY,
     'X-Api-Version': '2023-10'
 };
 

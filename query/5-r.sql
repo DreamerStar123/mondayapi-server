@@ -6,21 +6,18 @@ SELECT
 	dbo.Material_Req.Pick_Buy_Indicator,
 	dbo.Material_Req.Type,
 	dbo.Job.Status,
+	dbo.Job.Part_Number,
 	dbo.Material_Req.Est_Qty,
 	dbo.Material_Req.Act_Qty,
-	[Act_Qty] - [Est_Qty] AS Delta
+	[Act_Qty] - [Est_Qty] AS Delta 
 FROM
-	(
-		dbo.Material_Req
-		LEFT JOIN dbo.Delivery ON dbo.Material_Req.Job = dbo.Delivery.Job
-	)
-	LEFT JOIN dbo.Job ON dbo.Delivery.Job = dbo.Job.Job
+	dbo.Material_Req
+	LEFT JOIN dbo.Delivery ON dbo.Material_Req.Job = dbo.Delivery.Job
+	LEFT JOIN dbo.Job ON dbo.Delivery.Job = dbo.Job.Job 
 WHERE
-	(
-		((dbo.Material_Req.Job) Not Like 't*')
-		AND ((dbo.Material_Req.Type) = 'r')
-		AND ((dbo.Job.Status) Not Like 'closed')
-		AND (([Act_Qty] - [Est_Qty]) < 0)
-	)
+	dbo.Material_Req.Job NOT LIKE 't*' 
+	AND dbo.Material_Req.Type  = 'r' 
+	AND dbo.Job.Status NOT LIKE 'closed' 
+-- 	AND [Act_Qty] - [Est_Qty] < 0 
 ORDER BY
 	dbo.Delivery.Promised_Date;

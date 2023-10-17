@@ -87,7 +87,7 @@ const createGanttColumns = async (board_id) => {
     // await createMatOrderColumns(1294187009);
     // await createOpenMachineColumns(1294187047);
     // await createNbrColumns(5333111913);
-    // await createNbsColumns(5338467380);
+    await createNbsColumns(5340444856);
     // await createNbsColumns(5338470037);
-    await createGanttColumns(1294270127);
+    // await createGanttColumns(1294270127);
 })();

@@ -18,13 +18,13 @@ const logger = winston.createLogger({
     let startTime = performance.now();
 
     const openJobBoardId = 5249505765;
-    // const noJobBoardId = 5252735219;
-    // const machineStatusBoardId = 5240959201;
-    // const rawMaterialOrdersBoardId = 5293869955;
-    // const openMachineBoardId = 5293870025;
-    // const nbrBoardId = 5333111913;
-    // const nbsBoardId = 5338467380;
-    // const nbhBoardId = 5338470037;
+    const noJobBoardId = 5252735219;
+    const machineStatusBoardId = 5240959201;
+    const rawMaterialOrdersBoardId = 5293869955;
+    const openMachineBoardId = 5293870025;
+    const nbrBoardId = 5333111913;
+    const nbsBoardId = 5340444856;
+    const nbhBoardId = 5338470037;
 
     // const openJobBoardId = 1294186867;
     // const machineStatusBoardId = 1294186963;
@@ -37,13 +37,13 @@ const logger = winston.createLogger({
 
     const proxy = true;
 
-    await open_job.updateOpenJob(openJobBoardId, proxy, logger);
+    // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
     // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
     // await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     // await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
     // await not_bought.updateNbr(nbrBoardId, proxy, logger);
-    // await not_bought.updateNbs(nbsBoardId, proxy, 'query/5-s.sql', logger);
-    // await not_bought.updateNbs(nbhBoardId, proxy, 'query/5-h.sql', logger);
+    await not_bought.updateNbs(nbsBoardId, proxy, 'query/5-s.sql', logger);
+    await not_bought.updateNbs(nbhBoardId, proxy, 'query/5-h.sql', logger);
     // await gantt.updateGantt(ganttBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;

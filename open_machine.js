@@ -33,6 +33,7 @@ module.exports.updateOpenMachine = async (board_id, proxy, logger) => {
         ["po_order_qty", "PO_Order_Qty"],
         ["act_qty", "Act_Qty"],
         ["last_recv_date", "Last_Recv_Date"],
+        ["issued_by", "Issued_By"],
     ];
 
     let updatedCount = 0;
@@ -63,6 +64,7 @@ module.exports.updateOpenMachine = async (board_id, proxy, logger) => {
                         po_order_qty: record.PO_Order_Qty,
                         act_qty: record.Act_Qty,
                         last_recv_date: record.Last_Recv_Date,
+                        issued_by: record.Issued_By,
                     };
                     // console.log(item, record);
                     await monday.change_multiple_column_values(item.id, board_id, column_values);
@@ -91,6 +93,7 @@ module.exports.updateOpenMachine = async (board_id, proxy, logger) => {
                 po_order_qty: record.PO_Order_Qty,
                 act_qty: record.Act_Qty,
                 last_recv_date: record.Last_Recv_Date,
+                issued_by: record.Issued_By,
             };
             await monday.create_item(board_id, item_name, column_values);
             newCount++;

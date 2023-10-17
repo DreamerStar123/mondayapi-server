@@ -49,6 +49,7 @@ module.exports.updateMatOrder = async (board_id, proxy, logger) => {
         ["job_qty", "Job_Qty"],
         ["order_qty", "Order_Quantity"],
         ["act_qty", "Act_Qty"],
+        ["issued_by", "Issued_By"],
     ];
 
     let updatedCount = 0;
@@ -78,6 +79,7 @@ module.exports.updateMatOrder = async (board_id, proxy, logger) => {
                         job_qty: record.Job_Qty,
                         order_qty: record.Order_Quantity,
                         act_qty: record.Act_Qty,
+                        issued_by: record.Issued_By,
                     };
                     await monday.change_multiple_column_values(item.id, board_id, column_values);
                     updatedCount++;
@@ -103,6 +105,7 @@ module.exports.updateMatOrder = async (board_id, proxy, logger) => {
                 job_qty: record.Job_Qty,
                 order_qty: record.Order_Quantity,
                 act_qty: record.Act_Qty,
+                issued_by: record.Issued_By,
             };
             if (record.PO)
                 await monday.create_item(board_id, item_name, column_values, "ordered");

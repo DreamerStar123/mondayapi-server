@@ -25,6 +25,7 @@ const logger = winston.createLogger({
     const nbrBoardId = 5333111913;
     const nbsBoardId = 5340444856;
     const nbhBoardId = 5338470037;
+    const ganttBoardId = 5343813711;
 
     // const openJobBoardId = 1294186867;
     // const machineStatusBoardId = 1294186963;
@@ -42,9 +43,9 @@ const logger = winston.createLogger({
     // await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     // await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
     // await not_bought.updateNbr(nbrBoardId, proxy, logger);
-    await not_bought.updateNbs(nbsBoardId, proxy, 'query/5-s.sql', logger);
-    await not_bought.updateNbs(nbhBoardId, proxy, 'query/5-h.sql', logger);
-    // await gantt.updateGantt(ganttBoardId, proxy, logger);
+    // await not_bought.updateNbs(nbsBoardId, proxy, logger);
+    // await not_bought.updateNbh(nbhBoardId, proxy, logger);
+    await gantt.updateGantt(ganttBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

@@ -34,6 +34,7 @@ const createMatOrderColumns = async (board_id) => {
     await create_column(board_id, "job_qty", "Job Qty", "numbers");
     await create_column(board_id, "order_qty", "Material PO Qty", "numbers");
     await create_column(board_id, "act_qty", "Material PO Rcvd", "numbers");
+    await create_column(board_id, "issued_by", "Issued By", "text");
 }
 
 const createOpenMachineColumns = async (board_id) => {
@@ -45,6 +46,7 @@ const createOpenMachineColumns = async (board_id) => {
     await create_column(board_id, "po_order_qty", "Material PO Qty", "numbers");
     await create_column(board_id, "act_qty", "Material PO Rcvd", "numbers");
     await create_column(board_id, "last_recv_date", "Last Recv Date", "date");
+    await create_column(board_id, "issued_by", "Issued By", "text");
 }
 
 const createNbrColumns = async (board_id) => {
@@ -59,6 +61,19 @@ const createNbrColumns = async (board_id) => {
 }
 
 const createNbsColumns = async (board_id) => {
+    await create_column(board_id, "material", "Material", "text");
+    await create_column(board_id, "due_date", "Due Date", "date");
+    await create_column(board_id, "mat_desc", "Mat_Desc", "text");
+    await create_column(board_id, "job_desc", "Job_Desc", "text");
+    await create_column(board_id, "pick_buy", "Pick Buy Indicator", "text");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "est_qty", "Est Qty", "numbers");
+    await create_column(board_id, "act_qty", "Act Qty", "numbers");
+    await create_column(board_id, "delta", "Delta", "numbers");
+    await create_column(board_id, "onhand_qty", "On_Hand_Qty", "numbers");
+}
+
+const createNbhColumns = async (board_id) => {
     await create_column(board_id, "material", "Material", "text");
     await create_column(board_id, "due_date", "Due Date", "date");
     await create_column(board_id, "mat_desc", "Mat_Desc", "text");
@@ -84,10 +99,10 @@ const createGanttColumns = async (board_id) => {
 (async () => {
     // await createOpenJobColumns(1294186867);
     // await createMachineStatusColumns(1294186963);
-    // await createMatOrderColumns(1294187009);
-    // await createOpenMachineColumns(1294187047);
+    // await createMatOrderColumns(5293869955);
+    // await createOpenMachineColumns(5293870025);
     // await createNbrColumns(5333111913);
-    await createNbsColumns(5340444856);
-    // await createNbsColumns(5338470037);
-    // await createGanttColumns(1294270127);
+    // await createNbsColumns(5340444856);
+    // await createNbhColumns(5338470037);
+    await createGanttColumns(5343813711);
 })();

@@ -10,16 +10,17 @@ SELECT
 	dbo.Job.Status,
 	dbo.Material_Req.Est_Qty,
 	dbo.Material_Req.Act_Qty,
-	[Act_Qty] - [Est_Qty] AS Delta 
+	[Act_Qty] - [Est_Qty] AS Delta,
+	dbo.Material_Location.On_Hand_Qty
 FROM
 	dbo.Material_Req
 	LEFT JOIN dbo.Delivery ON dbo.Material_Req.Job = dbo.Delivery.Job
-	LEFT JOIN dbo.Job ON dbo.Delivery.Job = dbo.Job.Job 
+	LEFT JOIN dbo.Job ON dbo.Delivery.Job = dbo.Job.Job
+	LEFT JOIN dbo.Material_Location ON dbo.Material_Req.Material = dbo.Material_Location.Material
 WHERE
-	dbo.Material_Req.Job NOT LIKE 't*' 
-	AND dbo.Material_Req.Type  = 's' 
-	AND dbo.Job.Status NOT LIKE 'closed' 
--- 	AND [Act_Qty] - [Est_Qty] < 0 
+	dbo.Material_Req.Job NOT LIKE 't*'
+	AND dbo.Material_Req.Type = 's'
+	AND dbo.Job.Status NOT LIKE 'closed'
 ORDER BY
 	dbo.Material_Req.Material,
 	dbo.Delivery.Promised_Date;

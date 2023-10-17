@@ -4,8 +4,8 @@ require('dotenv').config();
 
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': process.env.TEST_API_KEY,
-    // 'Authorization': process.env.MONDAY_API_KEY,
+    // 'Authorization': process.env.TEST_API_KEY,
+    'Authorization': process.env.MONDAY_API_KEY,
     'X-Api-Version': '2023-10'
 };
 
@@ -129,7 +129,9 @@ module.exports.change_multiple_column_values = async (item_id, board_id, column_
     for (const id in column_values) {
         if (colvals !== "")
             colvals += ', ';
-        let value = column_values[id] || '';
+        let value = column_values[id];
+        if (value === null)
+            value = '';
         value = validateDate(value);
         colvals += `\\"${id}\\":\\"${value}\\"`;
     }

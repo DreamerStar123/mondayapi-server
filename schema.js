@@ -4,14 +4,14 @@ const {
 } = require('./modules/monday');
 
 const createOpenJobColumns = async (board_id) => {
-    await create_column(board_id, "date4", "Ship Date", "date");
-    await create_column(board_id, "date4", "Due Date", "date");
-    await create_column(board_id, "text", "Sales_Order", "text");
-    await create_column(board_id, "text0", "SO_Line", "text");
-    await create_column(board_id, "status3", "Status", "status");
-    await create_column(board_id, "numbers", "Order_Qty", "numbers");
-    await create_column(board_id, "numbers1", "Shipped_Qty", "numbers");
-    await create_column(board_id, "numbers7", "Open_Qty", "numbers");
+    await create_column(board_id, "ship_date", "Ship Date", "date");
+    await create_column(board_id, "due_date", "Due Date", "date");
+    await create_column(board_id, "sales_order", "Sales_Order", "text");
+    await create_column(board_id, "so_line", "SO_Line", "text");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "order_qty", "Order_Qty", "numbers");
+    await create_column(board_id, "shipped_qty", "Shipped_Qty", "numbers");
+    await create_column(board_id, "open_qty", "Open_Qty", "numbers");
 }
 
 const createMachineStatusColumns = async (board_id) => {
@@ -27,7 +27,6 @@ const createMachineStatusColumns = async (board_id) => {
     await create_column(board_id, "so_open_qty", "Open Qty", "numbers");
 }
 
-// vendor, PO#, PO due date, job qty, material PO qty, material po rcvd
 const createMatOrderColumns = async (board_id) => {
     await create_column(board_id, "vendor", "VENDOR", "text");
     await create_column(board_id, "po", "PO #", "text");
@@ -37,7 +36,6 @@ const createMatOrderColumns = async (board_id) => {
     await create_column(board_id, "act_qty", "Material PO Rcvd", "numbers");
 }
 
-// 	Vendor, Job_Order_Qty, Operation_Service, Material_Req, PO, Due_Date, PO_Order_Qty, Act_Qty, Last_Recv_Date 
 const createOpenMachineColumns = async (board_id) => {
     await create_column(board_id, "vendor", "VENDOR", "text");
     await create_column(board_id, "job_order_qty", "Job Order Qty", "numbers");
@@ -49,9 +47,47 @@ const createOpenMachineColumns = async (board_id) => {
     await create_column(board_id, "last_recv_date", "Last Recv Date", "date");
 }
 
+const createNbrColumns = async (board_id) => {
+    await create_column(board_id, "due_date", "Due Date", "date");
+    await create_column(board_id, "material", "Material", "text");
+    await create_column(board_id, "description", "Description", "text");
+    await create_column(board_id, "pick_buy", "Pick Buy Indicator", "text");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "est_qty", "Est Qty", "numbers");
+    await create_column(board_id, "act_qty", "Act Qty", "numbers");
+    await create_column(board_id, "delta", "Delta", "numbers");
+}
+
+const createNbsColumns = async (board_id) => {
+    await create_column(board_id, "material", "Material", "text");
+    await create_column(board_id, "due_date", "Due Date", "date");
+    await create_column(board_id, "mat_desc", "Mat_Desc", "text");
+    await create_column(board_id, "job_desc", "Job_Desc", "text");
+    await create_column(board_id, "pick_buy", "Pick Buy Indicator", "text");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "est_qty", "Est Qty", "numbers");
+    await create_column(board_id, "act_qty", "Act Qty", "numbers");
+    await create_column(board_id, "delta", "Delta", "numbers");
+}
+
+const createGanttColumns = async (board_id) => {
+    await create_column(board_id, "due_date", "Due Date", "date");
+    await create_column(board_id, "customer", "Customer", "text");
+    await create_column(board_id, "material", "Material", "text");
+    await create_column(board_id, "order_qty", "Order Qty", "numbers");
+    await create_column(board_id, "shipped_qty", "Shipped Qty", "numbers");
+    await create_column(board_id, "delta", "Delta", "numbers");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "onhand_qty", "On Hand Qty", "numbers");
+}
+
 (async () => {
-    await createOpenJobColumns(1293185486);
-    await createMachineStatusColumns(1293185622);
-    await createMatOrderColumns(1293185685);
-    await createOpenMachineColumns(1293186060);
+    // await createOpenJobColumns(1294186867);
+    // await createMachineStatusColumns(1294186963);
+    // await createMatOrderColumns(1294187009);
+    // await createOpenMachineColumns(1294187047);
+    // await createNbrColumns(5333111913);
+    // await createNbsColumns(5338467380);
+    // await createNbsColumns(5338470037);
+    await createGanttColumns(1294270127);
 })();

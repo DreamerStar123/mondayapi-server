@@ -3,23 +3,12 @@ const fs = require('fs');
 const monday = require('./modules/monday');
 const analysis = require('./modules/analysis');
 const mssql_query = require('./modules/mssql_query');
-
-const getStatus = (record) => {
-    let status = 5;
-    if (record.Job) {
-        if (record.SO_Status === 'Backorder')
-            status = 2;
-    } else {
-        if (record.SO_Status === 'Backorder')
-            status = 1;
-        else if (record.SO_Status === 'Open')
-            status = 0;
-    }
-    return status;
-}
+const {
+    getSOStatus
+} = require('./modules/status_code');
 
 const getColumnValues = (record) => {
-    let status = getStatus(record);
+    let status = getSOStatus(record.SO_Status);
     let dueDate = new Date(record.Promised_Date);
     let shipDate = new Date(dueDate);
     shipDate.setDate(shipDate.getDate() - 1);
@@ -98,9 +87,12 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        const item_name = `${record.Job} (${record.Part_Number})`;
-        await monday.create_item(board_id, item_name, getColumnValues(record));
-        newCount++;
+        if ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
+            record.SO_Status === 'Backorder') {
+            const item_name = `${record.Job} (${record.Part_Number})`;
+            await monday.create_item(board_id, item_name, getColumnValues(record));
+            newCount++;
+        }
     }
-    logger.info(`${newCount} items created`);
+    logger.info(`${newCount}/${recordset.length} items created`);
 }

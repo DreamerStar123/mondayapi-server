@@ -41,13 +41,12 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
     logger.info(`${items.length} items`);
 
     // read mssql data
-    const query = fs.readFileSync('query/open_job.sql', 'utf-8');
+    const query = fs.readFileSync('query/1-open_job.sql', 'utf-8');
     let recordset;
     if (proxy)
         recordset = await mssql_query.getResultFromProxyServer(query);
     else
         recordset = await mssql_query.getResultFromSQLServer(query);
-    // const recordset = JSON.parse(fs.readFileSync('query/open_job-2.json', 'utf8'));
     logger.info(`${recordset.length} records`);
 
     // analyze data

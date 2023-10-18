@@ -38,14 +38,14 @@ const logger = winston.createLogger({
     // const nbhBoardId = 1294201044;
     // const ganttBoardId = 1294270127;
 
-    // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
-    // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
+    await open_job.updateOpenJob(openJobBoardId, proxy, logger);
+    await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
     await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
-    // await not_bought.updateNbr(nbrBoardId, proxy, logger);
-    // await not_bought.updateNbs(nbsBoardId, proxy, logger);
-    // await not_bought.updateNbh(nbhBoardId, proxy, logger);
-    // await gantt.updateGantt(ganttBoardId, proxy, logger);
+    await not_bought.updateNbr(nbrBoardId, proxy, logger);
+    await not_bought.updateNbs(nbsBoardId, proxy, logger);
+    await not_bought.updateNbh(nbhBoardId, proxy, logger);
+    await gantt.updateGantt(ganttBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

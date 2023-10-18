@@ -24,6 +24,7 @@ cron.schedule('0 0 * * *', async () => {
     const nbrBoardId = 5333111913;
     const nbsBoardId = 5340444856;
     const nbhBoardId = 5338470037;
+    const ganttBoardId = 5343813711;
 
     const proxy = false;
 
@@ -32,8 +33,9 @@ cron.schedule('0 0 * * *', async () => {
     await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
     await not_bought.updateNbr(nbrBoardId, proxy, logger);
-    await not_bought.updateNbs(nbsBoardId, proxy, 'query/5-s.sql', logger);
-    await not_bought.updateNbs(nbhBoardId, proxy, 'query/5-h.sql', logger);
+    await not_bought.updateNbs(nbsBoardId, proxy, logger);
+    await not_bought.updateNbh(nbhBoardId, proxy, logger);
+    await gantt.updateGantt(ganttBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

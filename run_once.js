@@ -25,6 +25,7 @@ const logger = winston.createLogger({
     const nbrBoardId = 5333111913;
     const nbsBoardId = 5340444856;
     const nbhBoardId = 5338470037;
+    const ganttBoardId = 5343813711;
 
     const proxy = false;
 

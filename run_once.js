@@ -4,6 +4,7 @@ const machine_status = require('./machine_status');
 const mat_order = require('./mat_order');
 const open_machine = require('./open_machine');
 const not_bought = require('./not_bought');
+const gantt = require('./gantt');
 const winston = require("winston");
 
 const logger = winston.createLogger({
@@ -32,8 +33,9 @@ const logger = winston.createLogger({
     await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
     await not_bought.updateNbr(nbrBoardId, proxy, logger);
-    await not_bought.updateNbs(nbsBoardId, proxy, 'query/5-s.sql', logger);
-    await not_bought.updateNbs(nbhBoardId, proxy, 'query/5-h.sql', logger);
+    await not_bought.updateNbs(nbsBoardId, proxy, logger);
+    await not_bought.updateNbh(nbhBoardId, proxy, logger);
+    await gantt.updateGantt(ganttBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

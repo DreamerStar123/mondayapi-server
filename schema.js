@@ -61,7 +61,6 @@ const createNbrColumns = async (board_id) => {
 }
 
 const createNbsColumns = async (board_id) => {
-    await create_column(board_id, "material", "Material", "text");
     await create_column(board_id, "due_date", "Due Date", "date");
     await create_column(board_id, "mat_desc", "Mat_Desc", "text");
     await create_column(board_id, "job_desc", "Job_Desc", "text");

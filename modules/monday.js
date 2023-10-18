@@ -10,7 +10,6 @@ const headers = {
 };
 
 module.exports.getItems = async (board_id) => {
-    // GraphQL query to monday.com
     const query = `{
         boards(ids: ${board_id}) {
             items {
@@ -41,8 +40,25 @@ module.exports.getItems = async (board_id) => {
     return items;
 }
 
+module.exports.getGroups = async (board_id) => {
+    const query = `{
+            boards(ids: ${board_id}) {
+                groups {
+                    id
+                    title
+                }
+            }
+        }
+    `;
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    const groups = res.data.boards[0].groups;
+    return groups;
+}
+
 module.exports.delete_item = async (item_id) => {
-    // GraphQL query to monday.com
     const query = `
         mutation {
             delete_item(item_id: ${item_id}) {
@@ -51,7 +67,11 @@ module.exports.delete_item = async (item_id) => {
             }
         }
     `;
-    return await safeExecQuery(query);
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    return res.data.delete_item;
 }
 
 function validateDate(value) {
@@ -67,7 +87,6 @@ function validateDate(value) {
 
 module.exports.create_item = async (board_id, item_name, column_values, group_id = null) => {
     let gid = (group_id ? `group_id: "${group_id}"` : '');
-    // GraphQL query to monday.com
     let colvals = "";
     for (const id in column_values) {
         if (colvals !== "")
@@ -90,7 +109,11 @@ module.exports.create_item = async (board_id, item_name, column_values, group_id
         }
     `;
     // console.log(query);
-    return await safeExecQuery(query);
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    return res.data.create_item;
 }
 
 module.exports.create_column = async (board_id, id, title, column_type) => {
@@ -106,7 +129,31 @@ module.exports.create_column = async (board_id, id, title, column_type) => {
                 title
             }
         }`;
-    return await safeExecQuery(query, 1);
+    const res = await safeExecQuery(query, 1);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    return res.data.create_column;
+}
+
+module.exports.create_group = async (board_id, group_name, relative_to = '') => {
+    const query = `
+        mutation {
+            create_group(
+                board_id: ${board_id}
+                group_name: "${group_name}"
+                relative_to: "${relative_to}"
+            ) {
+                id
+                title
+            }
+        }
+    `;
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    return res.data.create_group;
 }
 
 module.exports.change_simple_column_value = async (item_id, board_id, column_id, value) => {
@@ -121,7 +168,11 @@ module.exports.change_simple_column_value = async (item_id, board_id, column_id,
                 id
             }
         }`;
-    return await safeExecQuery(query);
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    return res.data.change_simple_column_value;
 }
 
 module.exports.change_multiple_column_values = async (item_id, board_id, column_values) => {
@@ -150,7 +201,11 @@ module.exports.change_multiple_column_values = async (item_id, board_id, column_
                 }
             }
         }`;
-    return await safeExecQuery(query);
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    return res.data.change_multiple_column_values;
 }
 
 const safeExecQuery = async (query, max_cycle = 100) => {

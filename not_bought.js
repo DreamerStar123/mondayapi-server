@@ -105,10 +105,13 @@ module.exports.updateNbr = async (board_id, proxy, logger) => {
 module.exports.updateNbs = async (board_id, proxy, logger) => {
     logger.info(`=====> updateNbs(${board_id})`);
     // get items from monday.com
-    const items = await monday.getItems(board_id);
-    if (!items) {
+    const groups = await monday.getGroups(board_id);
+    if (!groups)
         return;
-    }
+    const items = await monday.getItems(board_id);
+    if (!items)
+        return;
+    logger.info(`${groups.length} groups`);
     logger.info(`${items.length} items`);
 
     // read mssql data
@@ -123,7 +126,7 @@ module.exports.updateNbs = async (board_id, proxy, logger) => {
 
     // analyze data
     const fieldMatch = [
-        ["material", "Material"],
+        // ["material", "Material"],
         ["due_date", "Promised_Date"],
         ["mat_desc", "Mat_Desc"],
         ["job_desc", "Job_Desc"],
@@ -155,7 +158,7 @@ module.exports.updateNbs = async (board_id, proxy, logger) => {
             if (record.Act_Qty - record.Est_Qty < 0) {
                 if (!analysis.compareFields(item, record, fieldMatch)) {
                     const column_values = {
-                        material: record.Material,
+                        // material: record.Material,
                         due_date: record.Promised_Date,
                         mat_desc: record.Mat_Desc,
                         job_desc: record.Job_Desc,
@@ -183,9 +186,16 @@ module.exports.updateNbs = async (board_id, proxy, logger) => {
     let newCount = 0;
     for (const record of recordset) {
         if (record.Act_Qty - record.Est_Qty < 0) {
+            // find group
+            let group = groups.find(group => group.title === record.Material);
+            if (!group) {
+                group = await monday.create_group(board_id, record.Material, groups[groups.length - 1].id);
+                groups.push(group);
+            }
+
             const item_name = `${record.Job} (${record.Part_Number})`;
             const column_values = {
-                material: record.Material,
+                // material: record.Material,
                 due_date: record.Promised_Date,
                 mat_desc: record.Mat_Desc,
                 job_desc: record.Job_Desc,
@@ -196,7 +206,7 @@ module.exports.updateNbs = async (board_id, proxy, logger) => {
                 delta: record.Delta,
                 onhand_qty: record.On_Hand_Qty,
             };
-            await monday.create_item(board_id, item_name, column_values);
+            await monday.create_item(board_id, item_name, column_values, group.id);
             newCount++;
         }
     }

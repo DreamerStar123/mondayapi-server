@@ -29,3 +29,11 @@ module.exports.getJobStatus = (status) => {
     }
     return 5;
 }
+
+module.exports.getShipDate = (dueDate) => {
+    let shipDate = new Date(dueDate);
+    shipDate.setDate(shipDate.getDate() - 1);
+    if (shipDate.getDay() == 5 || shipDate.getDay() == 6)
+        shipDate.setDate(shipDate.getDate() - (shipDate.getDay() - 4));
+    return shipDate;
+}

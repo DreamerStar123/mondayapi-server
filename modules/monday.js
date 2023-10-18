@@ -202,7 +202,7 @@ module.exports.change_multiple_column_values = async (item_id, board_id, column_
             }
         }`;
     const res = await safeExecQuery(query);
-    if (!res || res.errors !== undefined) {
+    if (!res || res.errors || res.error_data) {
         return null;
     }
     return res.data.change_multiple_column_values;

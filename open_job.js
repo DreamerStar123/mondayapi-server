@@ -4,16 +4,13 @@ const monday = require('./modules/monday');
 const analysis = require('./modules/analysis');
 const mssql_query = require('./modules/mssql_query');
 const {
-    getSOStatus
+    getSOStatus,
+    getShipDate
 } = require('./modules/status_code');
 
-const getColumnValues = (record) => {
-    let status = getSOStatus(record.SO_Status);
+const getColumnValues_Open = (record) => {
     let dueDate = new Date(record.Promised_Date);
-    let shipDate = new Date(dueDate);
-    shipDate.setDate(shipDate.getDate() - 1);
-    if (shipDate.getDay() == 5 || shipDate.getDay() == 6)
-        shipDate.setDate(shipDate.getDate() - (shipDate.getDay() - 4));
+    let shipDate = getShipDate(dueDate);
     dueDate = dueDate.toISOString().substr(0, 10);
     shipDate = shipDate.toISOString().substr(0, 10);
 
@@ -22,10 +19,29 @@ const getColumnValues = (record) => {
         date: shipDate,
         text: record.Sales_Order,
         text0: record.SO_Line,
-        status3: status,
+        status3: getSOStatus(record.SO_Status),
         numbers: record.Order_Qty,
         numbers1: record.Shipped_Qty,
         numbers7: record.Open_Qty
+    };
+    return column_values;
+}
+
+const getColumnValues_No = (record) => {
+    let dueDate = new Date(record.Promised_Date);
+    let shipDate = getShipDate(dueDate);
+    dueDate = dueDate.toISOString().substr(0, 10);
+    shipDate = shipDate.toISOString().substr(0, 10);
+
+    const column_values = {
+        due_date: dueDate,
+        ship_date: shipDate,
+        sales_order: record.Sales_Order,
+        so_line: record.SO_Line,
+        status: getSOStatus(record.SO_Status),
+        order_qty: record.Order_Qty,
+        shipped_qty: record.Shipped_Qty,
+        open_qty: record.Open_Qty
     };
     return column_values;
 }
@@ -77,7 +93,7 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
         }
         if (record && !analysis.compareFields(item, record, fieldMatch)) {
             // console.log(item, record);
-            await monday.change_multiple_column_values(item.id, board_id, getColumnValues(record));
+            await monday.change_multiple_column_values(item.id, board_id, getColumnValues_Open(record));
             updatedCount++;
         }
     }
@@ -89,9 +105,69 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
         if ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
             record.SO_Status === 'Backorder') {
             const item_name = `${record.Job} (${record.Part_Number})`;
-            await monday.create_item(board_id, item_name, getColumnValues(record));
+            await monday.create_item(board_id, item_name, getColumnValues_Open(record));
             newCount++;
         }
+    }
+    logger.info(`${newCount}/${recordset.length} items created`);
+}
+
+module.exports.updateNoJob = async (board_id, proxy, logger) => {
+    logger.info(`=====> updateNoJob(${board_id})`);
+    // get items from monday.com
+    const items = await monday.getItems(board_id);
+    if (!items) {
+        logger.info('getItems failed');
+        return;
+    }
+    logger.info(`${items.length} items`);
+
+    // read mssql data
+    const query = fs.readFileSync('query/1-no_job.sql', 'utf-8');
+    let recordset;
+    if (proxy)
+        recordset = await mssql_query.getResultFromProxyServer(query);
+    else
+        recordset = await mssql_query.getResultFromSQLServer(query);
+    logger.info(`${recordset.length} records`);
+
+    // analyze data
+    const fieldMatch = [
+        ["due_date", "Promised_Date"],
+        ["order_qty", "Order_Qty"],
+        ["shipped_qty", "Shipped_Qty"],
+        ["open_qty", "Open_Qty"],
+        ["status", "SO_Status"],
+    ];
+
+    let updatedCount = 0;
+    let deletedCount = 0;
+    let matchCount = 0;
+    for (const item of items) {
+        let index = recordset.findIndex(record => item.sales_order.value === record.Sales_Order && item.so_line.value === record.SO_Line);
+        let record = recordset[index];
+        if (index !== -1) {
+            recordset.splice(index, 1);
+            matchCount++;
+        } else {
+            await monday.delete_item(item.id);
+            deletedCount++;
+        }
+        if (record && !analysis.compareFields(item, record, fieldMatch)) {
+            // console.log(item, record);
+            await monday.change_multiple_column_values(item.id, board_id, getColumnValues_No(record));
+            updatedCount++;
+        }
+    }
+    logger.info(`${updatedCount}/${items.length} items updated`);
+    logger.info(`${deletedCount}/${items.length} items deleted`);
+
+    // add new items
+    let newCount = 0;
+    for (const record of recordset) {
+        const item_name = `No job`;
+        await monday.create_item(board_id, item_name, getColumnValues_No(record));
+        newCount++;
     }
     logger.info(`${newCount}/${recordset.length} items created`);
 }

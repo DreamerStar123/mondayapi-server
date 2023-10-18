@@ -30,6 +30,7 @@ const logger = winston.createLogger({
     const proxy = false;
 
     await open_job.updateOpenJob(openJobBoardId, proxy, logger);
+    await open_job.updateNoJob(noJobBoardId, proxy, logger);
     await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
     await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);

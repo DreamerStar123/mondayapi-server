@@ -36,9 +36,9 @@ const getColumnValues_No = (record) => {
     const column_values = {
         due_date: dueDate,
         ship_date: shipDate,
-        sales_order: record.Sales_Order,
+        // sales_order: record.Sales_Order,
         so_line: record.SO_Line,
-        status: getSOStatus(record.SO_Status),
+        status: getSOStatus(record.Status),
         order_qty: record.Order_Qty,
         shipped_qty: record.Shipped_Qty,
         open_qty: record.Open_Qty
@@ -137,14 +137,20 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
         ["order_qty", "Order_Qty"],
         ["shipped_qty", "Shipped_Qty"],
         ["open_qty", "Open_Qty"],
-        ["status", "SO_Status"],
+        ["status", "Status"],
     ];
 
     let updatedCount = 0;
     let deletedCount = 0;
     let matchCount = 0;
     for (const item of items) {
-        let index = recordset.findIndex(record => item.sales_order.value === record.Sales_Order && item.so_line.value === record.SO_Line);
+        let index = recordset.findIndex(record => {
+            let name = item.name;
+            let pos = name.indexOf("(");
+            if (pos !== -1)
+                name = name.substr(0, pos).trim();
+            return (name === record.Sales_Order && item.so_line.value === record.SO_Line);
+        });
         let record = recordset[index];
         if (index !== -1) {
             recordset.splice(index, 1);
@@ -165,7 +171,7 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        const item_name = `No job`;
+        const item_name = `${record.Sales_Order} (${record.Material})`;
         await monday.create_item(board_id, item_name, getColumnValues_No(record));
         newCount++;
     }

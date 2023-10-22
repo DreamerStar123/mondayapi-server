@@ -30,7 +30,7 @@ module.exports.updateGantt = async (board_id, proxy, logger) => {
     const fieldMatch = [
         ["due_date", "Promised_Date"],
         ["customer", "Customer"],
-        ["material", "Material"],
+        // ["material", "Material"],
         ["order_qty", "Order_Qty"],
         ["shipped_qty", "Shipped_Qty"],
         ["delta", "Delta"],
@@ -43,7 +43,10 @@ module.exports.updateGantt = async (board_id, proxy, logger) => {
     let matchCount = 0;
     for (const item of items) {
         let index = recordset.findIndex(record => {
-            let name = (item.name === 'No Job' ? null : item.name);
+            let name = item.name;
+            let pos = name.indexOf("(");
+            if (pos !== -1)
+                name = name.substr(0, pos).trim();
             return (name === record.Job);
         });
         const record = recordset[index];
@@ -52,26 +55,24 @@ module.exports.updateGantt = async (board_id, proxy, logger) => {
             matchCount++;
         }
         if (record) {
-            if (record.Shipped_Qty - record.Order_Qty < 0) {
-                if (!analysis.compareFields(item, record, fieldMatch)) {
-                    const column_values = {
-                        due_date: record.Promised_Date,
-                        customer: record.Customer,
-                        material: record.Material,
-                        order_qty: record.Order_Qty,
-                        shipped_qty: record.Shipped_Qty,
-                        delta: record.Delta,
-                        status: getSOStatus(record.Status),
-                        onhand_qty: record.On_Hand_Qty,
-                    };
-                    // console.log(item, record);
-                    await monday.change_multiple_column_values(item.id, board_id, column_values);
-                    updatedCount++;
-                }
-            } else {
-                await monday.delete_item(item.id);
-                deletedCount++;
+            if (!analysis.compareFields(item, record, fieldMatch)) {
+                const column_values = {
+                    due_date: record.Promised_Date,
+                    customer: record.Customer,
+                    // material: record.Material,
+                    order_qty: record.Order_Qty,
+                    shipped_qty: record.Shipped_Qty,
+                    delta: record.Delta,
+                    status: getSOStatus(record.Status),
+                    onhand_qty: record.On_Hand_Qty,
+                };
+                // console.log(item, record);
+                await monday.change_multiple_column_values(item.id, board_id, column_values);
+                updatedCount++;
             }
+        } else {
+            await monday.delete_item(item.id);
+            deletedCount++;
         }
     }
     logger.info(`${updatedCount}/${matchCount} items updated`);
@@ -80,21 +81,19 @@ module.exports.updateGantt = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        if (record.Shipped_Qty - record.Order_Qty < 0) {
-            const item_name = record.Job || 'No Job';
-            const column_values = {
-                due_date: record.Promised_Date,
-                customer: record.Customer,
-                material: record.Material,
-                order_qty: record.Order_Qty,
-                shipped_qty: record.Shipped_Qty,
-                delta: record.Delta,
-                status: getSOStatus(record.Status),
-                onhand_qty: record.On_Hand_Qty,
-            };
-            await monday.create_item(board_id, item_name, column_values);
-            newCount++;
-        }
+        const item_name = (record.Job ? `${record.Job} (${record.Material || ''})` : 'No Job');
+        const column_values = {
+            due_date: record.Promised_Date,
+            customer: record.Customer,
+            // material: record.Material,
+            order_qty: record.Order_Qty,
+            shipped_qty: record.Shipped_Qty,
+            delta: record.Delta,
+            status: getSOStatus(record.Status),
+            onhand_qty: record.On_Hand_Qty,
+        };
+        await monday.create_item(board_id, item_name, column_values);
+        newCount++;
     }
     logger.info(`${newCount}/${recordset.length} items created`);
 }

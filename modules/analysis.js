@@ -2,7 +2,9 @@
 module.exports.compareFields = (item, record, fieldMatch) => {
     for (const fieldPair of fieldMatch) {
         let itemField = item[fieldPair[0]];
-        let recordField = record[fieldPair[1]] || '';
+        let recordField = record[fieldPair[1]];
+        if (recordField !== 0)
+            recordField = recordField || '';
         // compare field value
         if (itemField.type === "date") {
             let d = new Date(recordField);

@@ -91,7 +91,9 @@ module.exports.create_item = async (board_id, item_name, column_values, group_id
     for (const id in column_values) {
         if (colvals !== "")
             colvals += ', ';
-        let value = column_values[id] || '';
+        let value = column_values[id];
+        if (value === null)
+            value = '';
         value = validateDate(value);
         colvals += `\\"${id}\\":\\"${value}\\"`;
     }

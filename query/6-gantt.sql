@@ -15,6 +15,6 @@ FROM
 WHERE
     dbo.SO_Header.Customer = 'enteg'
     AND dbo.SO_Detail.Shipped_Qty - dbo.SO_Detail.Order_Qty < 0
-    AND dbo.SO_Detail.Status = 'open'
+    AND (dbo.SO_Detail.Status = 'open' OR dbo.SO_Detail.Status = 'Backorder')
 ORDER BY
     dbo.SO_Detail.Promised_Date;

@@ -95,6 +95,17 @@ const createGanttColumns = async (board_id) => {
     await create_column(board_id, "onhand_qty", "On Hand Qty", "numbers");
 }
 
+const createWorkActColumns = async (board_id) => {
+    await create_column(board_id, "employee", "Employee", "text");
+    await create_column(board_id, "work_center", "Work_Center", "text");
+    await create_column(board_id, "opr_service", "Operation_Service", "text");
+    await create_column(board_id, "act_setup_hrs", "Act_Setup_Hrs", "numbers");
+    await create_column(board_id, "act_run_hrs", "Act_Run_Hrs", "numbers");
+    await create_column(board_id, "act_run_qty", "Act_Run_Qty", "numbers");
+    await create_column(board_id, "act_scrap_qty", "Act_Scrap_Qty", "numbers");
+    await create_column(board_id, "work_date", "Work_Date", "date");
+}
+
 (async () => {
     // await createOpenJobColumns(1294186867);
     // await createMachineStatusColumns(1294186963);
@@ -103,5 +114,6 @@ const createGanttColumns = async (board_id) => {
     // await createNbrColumns(5333111913);
     // await createNbsColumns(5340444856);
     // await createNbhColumns(5338470037);
-    await createGanttColumns(5343813711);
+    // await createGanttColumns(5343813711);
+    await createWorkActColumns(5382069579);
 })();

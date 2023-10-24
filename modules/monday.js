@@ -40,6 +40,39 @@ module.exports.getItems = async (board_id) => {
     return items;
 }
 
+module.exports.getGroupItems = async (board_id, group_id) => {
+    const query = `{
+        boards(ids: ${board_id}) {
+            groups(ids: ${group_id}) {
+                items {
+                    id
+                    name
+                    column_values {
+                        id
+                        title
+                        type
+                        text
+                    }
+                }
+            }
+        }
+    }`;
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    const items = res.data.boards[0].groups[0].items;
+    for (const item of items) {
+        for (const col of item.column_values) {
+            item[col.id] = {
+                type: col.type,
+                value: col.text
+            };
+        }
+    }
+    return items;
+}
+
 module.exports.getGroups = async (board_id) => {
     const query = `{
             boards(ids: ${board_id}) {

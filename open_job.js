@@ -77,36 +77,61 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
     ];
 
     let updatedCount = 0;
+    let deletedCount = 0;
     let matchCount = 0;
     for (const item of items) {
-        let index = recordset.findIndex(record => {
-            let name = item.name;
-            let pos = name.indexOf("(");
-            if (pos !== -1)
-                name = name.substr(0, pos).trim();
-            return (name === record.Job);
-        });
+        if (item.status3.value === 'Shipped') {
+            await monday.delete_item(item.id);
+            deletedCount++;
+            continue;
+        }
+
+        let index = recordset.findIndex(record => item.text.value === record.Sales_Order && item.text0.value === record.SO_Line);
         let record = recordset[index];
         if (index !== -1) {
             recordset.splice(index, 1);
             matchCount++;
+        } else {
+            console.log(`${item.name} doesn't match`);
         }
         if (record && !analysis.compareFields(item, record, fieldMatch)) {
-            // console.log(item, record);
-            await monday.change_multiple_column_values(item.id, board_id, getColumnValues_Open(record));
-            updatedCount++;
+            if (record.SO_Status === 'Shipped') {
+                await monday.delete_item(item.id);
+                deletedCount++;
+            } else {
+                await monday.change_multiple_column_values(item.id, board_id, getColumnValues_Open(record));
+                updatedCount++;
+            }
         }
     }
     logger.info(`${updatedCount}/${matchCount} items updated`);
+    logger.info(`${deletedCount}/${matchCount} items deleted`);
 
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        if ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
-            record.SO_Status === 'Backorder') {
-            const item_name = `${record.Job} (${record.Part_Number})`;
-            await monday.create_item(board_id, item_name, getColumnValues_Open(record));
-            newCount++;
+        // Set yesterday's date by subtracting 1 day from the current date in EDT
+        var yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        yesterday.setHours(0, 0, 0, 0); // Set the time to midnight in EDT
+        yesterday.toLocaleString("en-US", {
+            timeZone: "America/New_York"
+        });
+
+        // Assuming the given date is stored in a variable called 'givenDate'
+        var givenDate = new Date(record.Last_Updated); // Replace with your own given date
+        givenDate.setHours(0, 0, 0, 0); // Set the time to midnight in UTC
+        givenDate.toLocaleString("en-US", {
+            timeZone: "America/New_York"
+        });
+
+        if (givenDate >= yesterday) {
+            if ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
+                record.SO_Status === 'Backorder') {
+                const item_name = `${record.Job} (${record.Part_Number})`;
+                await monday.create_item(board_id, item_name, getColumnValues_Open(record));
+                newCount++;
+            }
         }
     }
     logger.info(`${newCount}/${recordset.length} items created`);

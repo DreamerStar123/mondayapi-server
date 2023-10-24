@@ -13,7 +13,7 @@ SELECT
 FROM
     dbo.SO_Detail
     INNER JOIN dbo.Job ON dbo.SO_Detail.Job = dbo.Job.Job
-WHERE
-    CAST(dbo.SO_Detail.Last_Updated AS DATE) >= CAST(GETDATE() - 1 AS DATE)
+-- WHERE
+    -- CAST(dbo.SO_Detail.Last_Updated AS DATE) >= CAST(GETDATE() - 1 AS DATE)
 ORDER BY
     dbo.SO_Detail.Promised_Date;

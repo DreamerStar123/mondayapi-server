@@ -5,6 +5,7 @@ const mat_order = require('./mat_order');
 const open_machine = require('./open_machine');
 const not_bought = require('./not_bought');
 const gantt = require('./gantt');
+const work_act = require('./work_act');
 const winston = require("winston");
 
 const logger = winston.createLogger({
@@ -28,6 +29,7 @@ const logger = winston.createLogger({
     const nbsBoardId = 5340444856;
     const nbhBoardId = 5338470037;
     const ganttBoardId = 5343813711;
+    const workActBoardId = 5382069579;
 
     // const openJobBoardId = 1294186867;
     // const machineStatusBoardId = 1294186963;
@@ -37,9 +39,10 @@ const logger = winston.createLogger({
     // const nbsBoardId = 1294201009;
     // const nbhBoardId = 1294201044;
     // const ganttBoardId = 1294270127;
+    // const workActBoardId = 1300837511;
 
     // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
-    await open_job.updateNoJob(noJobBoardId, proxy, logger);
+    // await open_job.updateNoJob(noJobBoardId, proxy, logger);
     // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
     // await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     // await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
@@ -47,6 +50,7 @@ const logger = winston.createLogger({
     // await not_bought.updateNbs(nbsBoardId, proxy, logger);
     // await not_bought.updateNbh(nbhBoardId, proxy, logger);
     // await gantt.updateGantt(ganttBoardId, proxy, logger);
+    await work_act.updateWorkAct(workActBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

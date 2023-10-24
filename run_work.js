@@ -9,7 +9,7 @@ const logger = winston.createLogger({
     }), new winston.transports.Console]
 });
 
-cron.schedule('0,15,30,46 * * * *', async () => {
+cron.schedule('0,15,30,45 * * * *', async () => {
     logger.info(`============================== ${new Date().toISOString()} ==============================`);
     let startTime = performance.now();
 

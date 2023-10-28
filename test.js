@@ -7,6 +7,7 @@ const not_bought = require('./not_bought');
 const gantt = require('./gantt');
 const work_act = require('./work_act');
 const winston = require("winston");
+const { Table } = require('mssql');
 
 const logger = winston.createLogger({
     transports: [new winston.transports.File({
@@ -50,7 +51,7 @@ const logger = winston.createLogger({
     // await not_bought.updateNbs(nbsBoardId, proxy, logger);
     // await not_bought.updateNbh(nbhBoardId, proxy, logger);
     // await gantt.updateGantt(ganttBoardId, proxy, logger);
-    await work_act.updateWorkAct(workActBoardId, proxy, logger);
+    await work_act.updateWorkAct(workActBoardId, machineStatusBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

@@ -40,6 +40,34 @@ module.exports.getItems = async (board_id) => {
     return items;
 }
 
+module.exports.getItemValues = async (board_id) => {
+    const query = `{
+        boards(ids: ${board_id}) {
+            items {
+                id
+                name
+                column_values {
+                    id
+                    title
+                    type
+                    text
+                    value
+                }
+            }
+        }
+    }`;
+    const res = await safeExecQuery(query);
+    if (!res || res.errors !== undefined) {
+        return null;
+    }
+    const items = res.data.boards[0].items;
+    for (const item of items) {
+        for (const col of item.column_values)
+            item[col.id] = col;
+    }
+    return items;
+}
+
 module.exports.getGroupItems = async (board_id, group_id) => {
     const query = `{
         boards(ids: ${board_id}) {

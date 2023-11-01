@@ -271,6 +271,23 @@ module.exports.change_multiple_column_values = async (item_id, board_id, column_
     return res.data.change_multiple_column_values;
 }
 
+module.exports.move_item_to_group = async (item_id, group_id) => {
+    const query = `
+        mutation {
+            move_item_to_group(item_id: ${item_id} group_id: "${group_id}") {
+                id
+                group {
+                    id
+                }
+            }
+        }`;
+    const res = await safeExecQuery(query);
+    if (!res || res.errors || res.error_data) {
+        return null;
+    }
+    return res.data.move_item_to_group;
+}
+
 const safeExecQuery = async (query, max_cycle = 100) => {
     for (let i = 0; i < max_cycle; i++) {
         try {

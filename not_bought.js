@@ -155,6 +155,15 @@ module.exports.updateNbs = async (board_id, proxy, logger) => {
             matchCount++;
         }
         if (record) {
+            // find group
+            let group = groups.find(group => group.title === record.Material);
+            if (!group) {
+                group = await monday.create_group(board_id, record.Material, groups[groups.length - 1].id);
+                groups.push(group);
+            }
+            if (group) {
+                await monday.move_item_to_group(item.id, group.id);
+            }
             if (record.Act_Qty - record.Est_Qty < 0) {
                 if (!analysis.compareFields(item, record, fieldMatch)) {
                     const column_values = {
@@ -177,6 +186,9 @@ module.exports.updateNbs = async (board_id, proxy, logger) => {
                 await monday.delete_item(item.id);
                 deletedCount++;
             }
+        } else {
+            await monday.delete_item(item.id);
+            deletedCount++;
         }
     }
     logger.info(`${updatedCount}/${matchCount} items updated`);
@@ -266,6 +278,15 @@ module.exports.updateNbh = async (board_id, proxy, logger) => {
         }
         if (record) {
             if (record.Act_Qty - record.Est_Qty < 0) {
+                // find group
+                let group = groups.find(group => group.title === record.Material);
+                if (!group) {
+                    group = await monday.create_group(board_id, record.Material, groups[groups.length - 1].id);
+                    groups.push(group);
+                }
+                if (group) {
+                    await monday.move_item_to_group(item.id, group.id);
+                }
                 if (!analysis.compareFields(item, record, fieldMatch)) {
                     const column_values = {
                         // material: record.Material,
@@ -286,12 +307,14 @@ module.exports.updateNbh = async (board_id, proxy, logger) => {
                 await monday.delete_item(item.id);
                 deletedCount++;
             }
+        } else {
+            await monday.delete_item(item.id);
+            deletedCount++;
         }
     }
-    logger.info(`${updatedCount}/${matchCount} items updated`);
-    logger.info(`${deletedCount}/${matchCount} items deleted`);
+    logger.info(`${updatedCount}/${items.length} items updated`);
+    logger.info(`${deletedCount}/${items.length} items deleted`);
 
-    // add new items
     // add new items
     let newCount = 0;
     for (const record of recordset) {

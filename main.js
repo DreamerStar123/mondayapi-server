@@ -5,21 +5,17 @@ const mat_order = require('./mat_order');
 const open_machine = require('./open_machine');
 const not_bought = require('./not_bought');
 const gantt = require('./gantt');
-const work_act = require('./work_act');
 const winston = require("winston");
-const { Table } = require('mssql');
 
 const logger = winston.createLogger({
     transports: [new winston.transports.File({
-        filename: 'logs-test.txt'
+        filename: 'logs.txt'
     }), new winston.transports.Console]
 });
 
-(async () => {
+module.exports.main = async () => {
     logger.info(`============================== ${new Date().toISOString()} ==============================`);
     let startTime = performance.now();
-
-    const proxy = true;
 
     const openJobBoardId = 5249505765;
     const noJobBoardId = 5252735219;
@@ -30,17 +26,8 @@ const logger = winston.createLogger({
     const nbsBoardId = 5340444856;
     const nbhBoardId = 5338470037;
     const ganttBoardId = 5343813711;
-    const workActBoardId = 5382069579;
 
-    // const openJobBoardId = 1294186867;
-    // const machineStatusBoardId = 1294186963;
-    // const rawMaterialOrdersBoardId = 1294187009;
-    // const openMachineBoardId = 1294187047;
-    // const nbrBoardId = 1294200979;
-    // const nbsBoardId = 1294201009;
-    // const nbhBoardId = 1294201044;
-    // const ganttBoardId = 1294270127;
-    // const workActBoardId = 1300837511;
+    const proxy = false;
 
     await open_job.updateOpenJob(openJobBoardId, proxy, logger);
     await open_job.updateNoJob(noJobBoardId, proxy, logger);
@@ -51,8 +38,7 @@ const logger = winston.createLogger({
     await not_bought.updateNbs(nbsBoardId, proxy, logger);
     await not_bought.updateNbh(nbhBoardId, proxy, logger);
     await gantt.updateGantt(ganttBoardId, proxy, logger);
-    // await work_act.updateWorkAct(workActBoardId, machineStatusBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);
-})();
+}

@@ -64,7 +64,7 @@ const updateGroup = async (board_id, group_id, items, recordset, logger) => {
 }
 
 module.exports.updateWorkAct = async (board_id, mach_board_id, proxy, logger) => {
-    logger.info(`=====> updateWorkAct(${board_id})`);
+    logger.info(`=====> updateWorkAct(${board_id}, ${mach_board_id})`);
     // get items from monday.com
     const items_today = await monday.getGroupItems(board_id, "today");
     if (!items_today)

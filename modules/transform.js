@@ -11,7 +11,6 @@ const getLocation = (val) => {
 }
 
 module.exports.pullColumnDataFromOtherBoard = async (board_id_fr, column_id_fr, board_id_to, column_id_to, logger) => {
-    logger.info(`=====> pullColumnDataFromOtherBoard(${board_id_fr}, ${column_id_fr}, ${board_id_to}, ${column_id_to})`);
     // get items from monday.com
     const items_fr = await monday.getItemValues(board_id_fr);
     if (!items_fr) {

@@ -196,7 +196,7 @@ module.exports.create_column = async (board_id, id, title, column_type) => {
     if (!res || res.errors !== undefined) {
         return null;
     }
-    return res.data.create_column;
+    return res.data && res.data.create_column;
 }
 
 module.exports.create_group = async (board_id, group_name, relative_to = '') => {

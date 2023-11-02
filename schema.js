@@ -14,6 +14,17 @@ const createOpenJobColumns = async (board_id) => {
     await create_column(board_id, "open_qty", "Open_Qty", "numbers");
 }
 
+const createNoJobColumns = async (board_id) => {
+    await create_column(board_id, "ship_date", "Ship Date", "date");
+    await create_column(board_id, "due_date", "Due Date", "date");
+    await create_column(board_id, "so_line", "SO_Line", "text");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "order_qty", "Order_Qty", "numbers");
+    await create_column(board_id, "shipped_qty", "Shipped_Qty", "numbers");
+    await create_column(board_id, "open_qty", "Open_Qty", "numbers");
+    await create_column(board_id, "hand_qty", "On_Hand_Qty", "numbers");
+}
+
 const createMachineStatusColumns = async (board_id) => {
     await create_column(board_id, "vendor", "VENDOR", "text");
     await create_column(board_id, "po", "PO #", "text");
@@ -108,6 +119,7 @@ const createWorkActColumns = async (board_id) => {
 
 (async () => {
     // await createOpenJobColumns(1294186867);
+    await createNoJobColumns(5252735219);
     // await createMachineStatusColumns(1294186963);
     // await createMatOrderColumns(5293869955);
     // await createOpenMachineColumns(5293870025);
@@ -115,5 +127,5 @@ const createWorkActColumns = async (board_id) => {
     // await createNbsColumns(5340444856);
     // await createNbhColumns(5338470037);
     // await createGanttColumns(5343813711);
-    await createWorkActColumns(5382069579);
+    // await createWorkActColumns(5382069579);
 })();

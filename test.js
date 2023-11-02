@@ -42,15 +42,15 @@ const logger = winston.createLogger({
     // const ganttBoardId = 1294270127;
     // const workActBoardId = 1300837511;
 
-    await open_job.updateOpenJob(openJobBoardId, proxy, logger);
-    await open_job.updateNoJob(noJobBoardId, proxy, logger);
-    await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
-    await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
-    await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
-    await not_bought.updateNbr(nbrBoardId, proxy, logger);
-    await not_bought.updateNbs(nbsBoardId, proxy, logger);
-    await not_bought.updateNbh(nbhBoardId, proxy, logger);
-    await gantt.updateGantt(ganttBoardId, proxy, logger);
+    // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
+    // await open_job.updateNoJob(noJobBoardId, proxy, logger);
+    // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
+    // await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
+    // await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
+    // await not_bought.updateNbr(nbrBoardId, proxy, logger);
+    // await not_bought.updateNbs(nbsBoardId, proxy, logger);
+    // await not_bought.updateNbh(nbhBoardId, proxy, logger);
+    // await gantt.updateGantt(ganttBoardId, proxy, logger);
     // await work_act.updateWorkAct(workActBoardId, machineStatusBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;

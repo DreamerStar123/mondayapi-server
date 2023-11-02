@@ -41,7 +41,8 @@ const getColumnValues_No = (record) => {
         status: getSOStatus(record.Status),
         order_qty: record.Order_Qty,
         shipped_qty: record.Shipped_Qty,
-        open_qty: record.Open_Qty
+        open_qty: record.Open_Qty,
+        hand_qty: record.On_Hand_Qty,
     };
     return column_values;
 }
@@ -163,6 +164,7 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
         ["shipped_qty", "Shipped_Qty"],
         ["open_qty", "Open_Qty"],
         ["status", "Status"],
+        ["hand_qty", "On_Hand_Qty"],
     ];
 
     let updatedCount = 0;

@@ -14,6 +14,18 @@ module.exports.getSOStatus = (status) => {
     return 5;
 }
 
+module.exports.getPOStatus = (status) => {
+    switch (status) {
+        case "Unissued":
+            return 0;
+        case "Closed":
+            return 1;
+        case "Open":
+            return 2;
+    }
+    return 5;
+}
+
 module.exports.getJobStatus = (status) => {
     switch (status) {
         case "Closed":

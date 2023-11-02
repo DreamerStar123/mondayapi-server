@@ -117,9 +117,34 @@ const createWorkActColumns = async (board_id) => {
     await create_column(board_id, "work_date", "Work_Date", "date");
 }
 
+const createBookedOrdersColumns = async (board_id) => {
+    await create_column(board_id, "so_line", "SO_Line", "text");
+    await create_column(board_id, "order_date", "Order_Date", "date");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "shipped_qty", "Shipped_Qty", "numbers");
+    await create_column(board_id, "open_qty", "Open_Qty", "numbers");
+    await create_column(board_id, "due_date1", "Due_Date(Sun)", "date");
+    await create_column(board_id, "order_qty1", "Order_Qty(Sun)", "numbers");
+    await create_column(board_id, "due_date2", "Due_Date", "date");
+    await create_column(board_id, "order_qty2", "Order_Qty", "numbers");
+}
+
+const createOpenServiceColumns = async (board_id) => {
+    await create_column(board_id, "vendor", "Vendor", "text");
+    await create_column(board_id, "opr_service", "Operation_Service", "text");
+    await create_column(board_id, "mat_req", "Material_Req", "numbers");
+    await create_column(board_id, "po", "PO #", "text");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "due_date", "Due_Date", "date");
+    await create_column(board_id, "order_qty", "Order_Quantity", "numbers");
+    await create_column(board_id, "poordered_qty", "POOrdered_Qty", "numbers");
+    await create_column(board_id, "act_qty", "Act_Qty", "numbers");
+    await create_column(board_id, "lastrecv_date", "Last_Recv_Date", "date");
+}
+
 (async () => {
     // await createOpenJobColumns(1294186867);
-    await createNoJobColumns(5252735219);
+    // await createNoJobColumns(5252735219);
     // await createMachineStatusColumns(1294186963);
     // await createMatOrderColumns(5293869955);
     // await createOpenMachineColumns(5293870025);
@@ -128,4 +153,6 @@ const createWorkActColumns = async (board_id) => {
     // await createNbhColumns(5338470037);
     // await createGanttColumns(5343813711);
     // await createWorkActColumns(5382069579);
+    await createBookedOrdersColumns(5443787468);
+    await createOpenServiceColumns(5443446010);
 })();

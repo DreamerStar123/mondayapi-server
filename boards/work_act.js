@@ -1,9 +1,9 @@
 // import modules
 const fs = require('fs');
-const monday = require('./modules/monday');
-const analysis = require('./modules/analysis');
-const transform = require('./modules/transform');
-const mssql_query = require('./modules/mssql_query');
+const monday = require('../modules/monday');
+const analysis = require('../modules/analysis');
+const transform = require('../modules/transform');
+const mssql_query = require('../modules/mssql_query');
 const { log } = require('console');
 
 const getColumnValues = (record) => {

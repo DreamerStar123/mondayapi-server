@@ -5,7 +5,7 @@ const winston = require("winston");
 
 const logger = winston.createLogger({
     transports: [new winston.transports.File({
-        filename: 'logs-work.txt'
+        filename: 'logs/logs-work.txt'
     }), new winston.transports.Console]
 });
 

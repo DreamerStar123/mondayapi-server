@@ -1,12 +1,12 @@
 // import modules
 const fs = require('fs');
-const monday = require('./modules/monday');
-const analysis = require('./modules/analysis');
-const mssql_query = require('./modules/mssql_query');
+const monday = require('../modules/monday');
+const analysis = require('../modules/analysis');
+const mssql_query = require('../modules/mssql_query');
 const {
     getSOStatus,
     getShipDate
-} = require('./modules/status_code');
+} = require('../modules/status_code');
 
 const getColumnValues_Open = (record) => {
     let dueDate = new Date(record.Promised_Date);

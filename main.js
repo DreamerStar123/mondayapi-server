@@ -1,15 +1,15 @@
 // import modules
-const open_job = require('./open_job');
-const machine_status = require('./machine_status');
-const mat_order = require('./mat_order');
-const open_machine = require('./open_machine');
-const not_bought = require('./not_bought');
-const gantt = require('./gantt');
+const open_job = require('./boards/open_job');
+const machine_status = require('./boards/machine_status');
+const mat_order = require('./boards/mat_order');
+const open_machine = require('./boards/open_machine');
+const not_bought = require('./boards/not_bought');
+const gantt = require('./boards/gantt');
 const winston = require("winston");
 
 const logger = winston.createLogger({
     transports: [new winston.transports.File({
-        filename: 'logs.txt'
+        filename: 'logs/logs.txt'
     }), new winston.transports.Console]
 });
 

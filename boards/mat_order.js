@@ -1,8 +1,8 @@
 // import modules
 const fs = require('fs');
-const monday = require('./modules/monday');
-const analysis = require('./modules/analysis');
-const mssql_query = require('./modules/mssql_query');
+const monday = require('../modules/monday');
+const analysis = require('../modules/analysis');
+const mssql_query = require('../modules/mssql_query');
 
 module.exports.updateMatOrder = async (board_id, proxy, logger) => {
     logger.info(`=====> updateMatOrder(${board_id})`);

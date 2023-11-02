@@ -1,11 +1,11 @@
 // import modules
 const fs = require('fs');
-const monday = require('./modules/monday');
-const analysis = require('./modules/analysis');
-const mssql_query = require('./modules/mssql_query');
+const monday = require('../modules/monday');
+const analysis = require('../modules/analysis');
+const mssql_query = require('../modules/mssql_query');
 const {
     getJobStatus
-} = require('./modules/status_code');
+} = require('../modules/status_code');
 
 module.exports.updateNbr = async (board_id, proxy, logger) => {
     logger.info(`=====> updateNbr(${board_id})`);

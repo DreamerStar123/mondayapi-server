@@ -9,19 +9,13 @@ const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
 const winston = require("winston");
 
-const logger = winston.createLogger({
-    transports: [new winston.transports.File({
-        filename: 'logs/logs.txt'
-    }), new winston.transports.Console]
-});
-
 module.exports.snapshot = async () => {
     const logger = winston.createLogger({
         transports: [new winston.transports.File({
             filename: 'logs/logs-snapshot.txt'
         }), new winston.transports.Console]
     });
-    
+
     logger.info(`============================== ${new Date().toISOString()} ==============================`);
     let startTime = performance.now();
 
@@ -35,6 +29,12 @@ module.exports.snapshot = async () => {
 }
 
 module.exports.main = async () => {
+    const logger = winston.createLogger({
+        transports: [new winston.transports.File({
+            filename: 'logs/logs.txt'
+        }), new winston.transports.Console]
+    });
+
     logger.info(`============================== ${new Date().toISOString()} ==============================`);
     let startTime = performance.now();
 

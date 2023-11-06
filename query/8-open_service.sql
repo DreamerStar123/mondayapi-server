@@ -23,15 +23,17 @@ FROM
 WHERE
     (
         ((dbo.Job.Job) Not Like 't*')
-        AND ((dbo.Job_Operation.Vendor) = 'T&TAN')
-        AND ((dbo.PO_Detail.PO) Is Not Null)
-        AND ((dbo.PO_Detail.Status) = 'OPEN')
+        AND (
+            dbo.Job_Operation.Vendor = 'T&TAN'
+            OR dbo.Job_Operation.Vendor = 'A&GCE'
+            OR dbo.Job_Operation.Vendor = 'ACCUR'
+            OR dbo.Job_Operation.Vendor = 'COATI'
+            OR dbo.Job_Operation.Vendor = 'CILIN'
+            OR dbo.Job_Operation.Vendor = 'ACCUG'
+            OR dbo.Job_Operation.Vendor = 'NEWME'
+        )
+        AND (dbo.PO_Detail.PO Is Not Null)
+        AND (dbo.PO_Detail.Status = 'OPEN')
     )
-    OR (((dbo.Job_Operation.Vendor) = 'ACCUG'))
-    OR (((dbo.Job_Operation.Vendor) = 'A&GCE'))
-    OR (((dbo.Job_Operation.Vendor) = 'ACCUR'))
-    OR (((dbo.Job_Operation.Vendor) = 'COATI'))
-    OR (((dbo.Job_Operation.Vendor) = 'CILIN'))
-    OR (((dbo.Job_Operation.Vendor) = 'NEWME'))
 ORDER BY
     dbo.Source.Due_Date;

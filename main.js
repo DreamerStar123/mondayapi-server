@@ -47,6 +47,8 @@ module.exports.main = async () => {
     const nbsBoardId = 5340444856;
     const nbhBoardId = 5338470037;
     const ganttBoardId = 5343813711;
+    const bookedOrdersBoardId = 5443787468;
+    const openServiceBoardId = 5443446010;
 
     const proxy = false;
 
@@ -59,6 +61,8 @@ module.exports.main = async () => {
     await not_bought.updateNbs(nbsBoardId, proxy, logger);
     await not_bought.updateNbh(nbhBoardId, proxy, logger);
     await gantt.updateGantt(ganttBoardId, proxy, logger);
+    await booked_orders.update(bookedOrdersBoardId, proxy, logger);
+    await open_service.updateOpenService(openServiceBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

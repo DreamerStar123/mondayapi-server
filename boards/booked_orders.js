@@ -4,23 +4,29 @@ const monday = require('../modules/monday');
 const analysis = require('../modules/analysis');
 const transform = require('../modules/transform');
 const mssql_query = require('../modules/mssql_query');
-const { getSOStatus } = require('../modules/status_code');
-const { loggers } = require('winston');
+const {
+    getSOStatus
+} = require('../modules/status_code');
+const {
+    loggers
+} = require('winston');
 
-const getColumnValues = (record) => {
+const getColumnValues = (record, rsun) => {
     const column_values = {
         so_line: record.SO_Line,
         order_date: record.Order_Date,
         status: getSOStatus(record.Status),
         shipped_qty: record.Shipped_Qty,
         open_qty: record.Open_Qty,
-        due_date1: record.Promised_Date,
-        order_qty1: record.Order_Qty,
+        due_date1: rsun.Promised_Date,
+        order_qty1: rsun.Order_Qty,
+        due_date2: record.Promised_Date,
+        order_qty2: record.Order_Qty,
     };
     return column_values;
 }
 
-const updateGroup = async (board_id, items, recordset, logger) => {
+const updateGroup = async (board_id, sun_rs, recordset, logger) => {
     // analyze data
     const fieldMatch = [
         ["so_line", "SO_Line"],
@@ -32,32 +38,17 @@ const updateGroup = async (board_id, items, recordset, logger) => {
         ["order_qty1", "Order_Qty"],
     ];
 
-    // let deletedCount = 0;
-    // let recordCount = recordset.length;
-    // for (const item of items) {
-    //     let index = recordset.findIndex(record => {
-    //         let name = item.name;
-    //         let pos = name.indexOf("(");
-    //         if (pos !== -1)
-    //             name = name.substr(0, pos).trim();
-    //         return name === record.Job && analysis.compareFields(item, record, fieldMatch);
-    //     });
-    //     const record = recordset[index];
-    //     if (index !== -1) {
-    //         recordset.splice(index, 1);
-    //     } else {
-    //         await monday.delete_item(item.id);
-    //         deletedCount++;
-    //     }
-    // }
-    // logger.info(`${deletedCount}/${recordCount} items deleted`);
-
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        const item_name = `${record.Sales_Order} (${record.Material})`;
-        await monday.create_item(board_id, item_name, getColumnValues(record));
-        newCount++;
+        let rsun = sun_rs.find(rsun => {
+            return record.Sales_Order === rsun.Sales_Order && record.SO_Line === rsun.SO_Line;
+        });
+        if (rsun && (record.Promised_Date != rsun.Promised_Date || record.Order_Qty != rsun.Order_Qty)) {
+            const item_name = `${record.Sales_Order} (${record.Material})`;
+            await monday.create_item(board_id, item_name, getColumnValues(record, rsun));
+            newCount++;
+        }
     }
     logger.info(`${newCount}/${recordset.length} items created`);
 }
@@ -70,15 +61,21 @@ module.exports.update = async (board_id, proxy, logger) => {
         return;
     logger.info(`${items.length} items`);
 
+    for (const item of items)
+        await monday.delete_item(item.id);
+    logger.info(`board cleaned`);
+
+    const sun_rs = JSON.parse(fs.readFileSync('data/8-booked_orders.json', 'utf-8'));
     const query = fs.readFileSync('query/8-booked_orders.sql', 'utf-8');
     let recordset;
     if (proxy)
         recordset = await mssql_query.getResultFromProxyServer(query);
     else
         recordset = await mssql_query.getResultFromSQLServer(query);
-    logger.info(`${recordset.length} records`);
+    logger.info(`${sun_rs.length} sunday records`);
+    logger.info(`${recordset.length} current records`);
 
-    await updateGroup(board_id, items, recordset, logger);
+    await updateGroup(board_id, sun_rs, recordset, logger);
 }
 
 module.exports.snapshot = async (board_id, proxy, logger) => {

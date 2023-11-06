@@ -37,25 +37,25 @@ const updateGroup = async (board_id, items, recordset, logger) => {
         ["lastrecv_date", "Last_Recv_Date"],
     ];
 
-    // let deletedCount = 0;
-    // let recordCount = recordset.length;
-    // for (const item of items) {
-    //     let index = recordset.findIndex(record => {
-    //         let name = item.name;
-    //         let pos = name.indexOf("(");
-    //         if (pos !== -1)
-    //             name = name.substr(0, pos).trim();
-    //         return name === record.Job && analysis.compareFields(item, record, fieldMatch);
-    //     });
-    //     const record = recordset[index];
-    //     if (index !== -1) {
-    //         recordset.splice(index, 1);
-    //     } else {
-    //         await monday.delete_item(item.id);
-    //         deletedCount++;
-    //     }
-    // }
-    // logger.info(`${deletedCount}/${recordCount} items deleted`);
+    let deletedCount = 0;
+    let recordCount = recordset.length;
+    for (const item of items) {
+        let index = recordset.findIndex(record => {
+            let name = item.name;
+            let pos = name.indexOf("(");
+            if (pos !== -1)
+                name = name.substr(0, pos).trim();
+            return name === record.Job && analysis.compareFields(item, record, fieldMatch);
+        });
+        const record = recordset[index];
+        if (index !== -1) {
+            recordset.splice(index, 1);
+        } else {
+            await monday.delete_item(item.id);
+            deletedCount++;
+        }
+    }
+    logger.info(`${deletedCount}/${recordCount} items deleted`);
 
     // add new items
     let newCount = 0;

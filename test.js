@@ -35,16 +35,6 @@ const logger = winston.createLogger({
     const bookedOrdersBoardId = 5443787468;
     const openServiceBoardId = 5443446010;
 
-    // const openJobBoardId = 1294186867;
-    // const machineStatusBoardId = 1294186963;
-    // const rawMaterialOrdersBoardId = 1294187009;
-    // const openMachineBoardId = 1294187047;
-    // const nbrBoardId = 1294200979;
-    // const nbsBoardId = 1294201009;
-    // const nbhBoardId = 1294201044;
-    // const ganttBoardId = 1294270127;
-    // const workActBoardId = 1300837511;
-
     // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
     // await open_job.updateNoJob(noJobBoardId, proxy, logger);
     // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
@@ -55,8 +45,8 @@ const logger = winston.createLogger({
     // await not_bought.updateNbh(nbhBoardId, proxy, logger);
     // await gantt.updateGantt(ganttBoardId, proxy, logger);
     // await work_act.updateWorkAct(workActBoardId, machineStatusBoardId, proxy, logger);
-    // await booked_orders.update(bookedOrdersBoardId, proxy, logger);
-    await booked_orders.snapshot(bookedOrdersBoardId, proxy, logger);
+    await booked_orders.update(bookedOrdersBoardId, proxy, logger);
+    // await booked_orders.snapshot(bookedOrdersBoardId, proxy, logger);
     // await open_service.updateOpenService(openServiceBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;

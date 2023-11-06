@@ -13,13 +13,9 @@ FROM
     INNER JOIN dbo.SO_Header ON dbo.SO_Detail.Sales_Order = dbo.SO_Header.Sales_Order
 WHERE
     (
-        ((dbo.SO_Detail.Status) = 'open')
-        AND (
-            (
-                dbo.SO_Detail.Order_Qty - dbo.SO_Detail.Shipped_Qty
-            ) <> 0
-        )
+        dbo.SO_Detail.Status = 'open'
+        AND dbo.SO_Detail.Order_Qty - dbo.SO_Detail.Shipped_Qty <> 0
     )
-    OR (((dbo.SO_Detail.Status) = 'Backorder'))
+    OR dbo.SO_Detail.Status = 'Backorder'
 ORDER BY
     SO_Detail.Sales_Order;

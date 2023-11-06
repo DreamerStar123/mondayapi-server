@@ -34,8 +34,8 @@ module.exports.getResultFromSQLServer = async (query) => {
 }
 
 module.exports.getResultFromProxyServer = async (query) => {
-    const url = 'http://184.168.31.101:3000';
-    // const url = 'http://141.94.120.0:3000';
+    const url = 'http://184.168.31.101:3000/mssql';
+    // const url = 'http://141.94.120.0:3000/mssql';
     const headers = {
         'Content-Type': 'application/json',
     };

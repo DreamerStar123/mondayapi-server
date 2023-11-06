@@ -145,6 +145,8 @@ const createOpenServiceColumns = async (board_id) => {
 const createContractReviewColumns = async (board_id) => {
     await create_column(board_id, "date_added", "DateAdded", "date");
     await create_column(board_id, "customer", "Customer", "text");
+    await create_column(board_id, "cr_duedate", "CRDueDate", "date");
+    await create_column(board_id, "linenumber", "LineNumber", "text");
     await create_column(board_id, "revision", "Revision", "text");
     await create_column(board_id, "status", "Status", "status");
     await create_column(board_id, "cr_status", "CR Status", "status");

@@ -1,42 +1,42 @@
 module.exports.getSOStatus = (status) => {
-    switch (status) {
-        case "Backorder":
+    switch (status.toLowerCase()) {
+        case "backorder":
             return 0;
-        case "Closed":
+        case "closed":
             return 1;
-        case "Hold":
+        case "hold":
             return 2;
-        case "Open":
+        case "open":
             return 3;
-        case "Shipped":
+        case "shipped":
             return 4;
     }
     return 5;
 }
 
 module.exports.getPOStatus = (status) => {
-    switch (status) {
-        case "Unissued":
+    switch (status.toLowerCase()) {
+        case "unissued":
             return 0;
-        case "Closed":
+        case "closed":
             return 1;
-        case "Open":
+        case "open":
             return 2;
     }
     return 5;
 }
 
 module.exports.getJobStatus = (status) => {
-    switch (status) {
-        case "Closed":
+    switch (status.toLowerCase()) {
+        case "closed":
             return 0;
-        case "Active":
+        case "active":
             return 1;
-        case "Complete":
+        case "complete":
             return 2;
-        case "Hold":
+        case "hold":
             return 3;
-        case "Template":
+        case "template":
             return 4;
     }
     return 5;

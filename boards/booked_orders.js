@@ -7,9 +7,6 @@ const mssql_query = require('../modules/mssql_query');
 const {
     getSOStatus
 } = require('../modules/status_code');
-const {
-    loggers
-} = require('winston');
 
 const getColumnValues = (record, rsun) => {
     const column_values = {

@@ -16,6 +16,11 @@ module.exports.compareFields = (item, record, fieldMatch) => {
                 console.log(`${fieldPair[0]}, ${fieldPair[1]}: ${itemField.value} != ${d}`);
                 return false;
             }
+        } else if (itemField.type === "color") {
+            if (itemField.value.toLowerCase() !== recordField.toLowerCase()) {
+                console.log(`${fieldPair[0]}, ${fieldPair[1]}: ${itemField.value.toLowerCase()} != ${recordField.toLowerCase()}`);
+                return false;
+            }
         } else if (itemField.value != recordField) {
             console.log(`${fieldPair[0]}, ${fieldPair[1]}: ${itemField.value} != ${recordField}`);
             return false;

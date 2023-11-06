@@ -49,6 +49,7 @@ module.exports.main = async () => {
     const ganttBoardId = 5343813711;
     const bookedOrdersBoardId = 5443787468;
     const openServiceBoardId = 5443446010;
+    const contractReviewBoardId = 5450393284;
 
     const proxy = false;
 
@@ -63,6 +64,7 @@ module.exports.main = async () => {
     await gantt.updateGantt(ganttBoardId, proxy, logger);
     await booked_orders.update(bookedOrdersBoardId, proxy, logger);
     await open_service.updateOpenService(openServiceBoardId, proxy, logger);
+    await contract_review.update(contractReviewBoardId, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

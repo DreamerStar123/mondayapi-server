@@ -5,6 +5,7 @@ const analysis = require('../modules/analysis');
 const transform = require('../modules/transform');
 const mssql_query = require('../modules/mssql_query');
 const { getSOStatus } = require('../modules/status_code');
+const { loggers } = require('winston');
 
 const getColumnValues = (record) => {
     const column_values = {
@@ -61,22 +62,33 @@ const updateGroup = async (board_id, items, recordset, logger) => {
     logger.info(`${newCount}/${recordset.length} items created`);
 }
 
-module.exports.updateBookedOrders = async (board_id, proxy, logger) => {
-    logger.info(`=====> updateBookedOrders(${board_id})`);
+module.exports.update = async (board_id, proxy, logger) => {
+    logger.info(`=====> booked_orders.update(${board_id})`);
     // get items from monday.com
     const items = await monday.getItems(board_id);
     if (!items)
         return;
     logger.info(`${items.length} items`);
 
-    // read mssql data
-    const query_today = fs.readFileSync('query/8-booked_orders.sql', 'utf-8');
+    const query = fs.readFileSync('query/8-booked_orders.sql', 'utf-8');
     let recordset;
     if (proxy)
-        recordset = await mssql_query.getResultFromProxyServer(query_today);
+        recordset = await mssql_query.getResultFromProxyServer(query);
     else
-        recordset = await mssql_query.getResultFromSQLServer(query_today);
+        recordset = await mssql_query.getResultFromSQLServer(query);
     logger.info(`${recordset.length} records`);
 
     await updateGroup(board_id, items, recordset, logger);
+}
+
+module.exports.snapshot = async (board_id, proxy, logger) => {
+    logger.info(`=====> booked_orders.snapshot(${board_id})`);
+    const query = fs.readFileSync('query/8-booked_orders.sql', 'utf-8');
+    let recordset;
+    if (proxy)
+        recordset = await mssql_query.getResultFromProxyServer(query);
+    else
+        recordset = await mssql_query.getResultFromSQLServer(query);
+    logger.info(`${recordset.length} records`);
+    fs.writeFileSync('data/8-booked_orders.json', JSON.stringify(recordset), 'utf-8');
 }

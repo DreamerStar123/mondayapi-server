@@ -5,6 +5,8 @@ const mat_order = require('./boards/mat_order');
 const open_machine = require('./boards/open_machine');
 const not_bought = require('./boards/not_bought');
 const gantt = require('./boards/gantt');
+const open_service = require('./boards/open_service');
+const booked_orders = require('./boards/booked_orders');
 const winston = require("winston");
 
 const logger = winston.createLogger({
@@ -12,6 +14,25 @@ const logger = winston.createLogger({
         filename: 'logs/logs.txt'
     }), new winston.transports.Console]
 });
+
+module.exports.snapshot = async () => {
+    const logger = winston.createLogger({
+        transports: [new winston.transports.File({
+            filename: 'logs/logs-snapshot.txt'
+        }), new winston.transports.Console]
+    });
+    
+    logger.info(`============================== ${new Date().toISOString()} ==============================`);
+    let startTime = performance.now();
+
+    const bookedOrdersBoardId = 5443787468;
+    const proxy = false;
+
+    await booked_orders.snapshot(bookedOrdersBoardId, proxy, logger);
+
+    const seconds = (performance.now() - startTime) / 1000;
+    logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);
+}
 
 module.exports.main = async () => {
     logger.info(`============================== ${new Date().toISOString()} ==============================`);

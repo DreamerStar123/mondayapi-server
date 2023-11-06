@@ -1,5 +1,5 @@
 // import modules
-const work_act = require('./work_act');
+const work_act = require('./boards/work_act');
 var cron = require('node-cron');
 const winston = require("winston");
 

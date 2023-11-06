@@ -142,6 +142,18 @@ const createOpenServiceColumns = async (board_id) => {
     await create_column(board_id, "lastrecv_date", "Last_Recv_Date", "date");
 }
 
+const createContractReviewColumns = async (board_id) => {
+    await create_column(board_id, "date_added", "DateAdded", "date");
+    await create_column(board_id, "customer", "Customer", "text");
+    await create_column(board_id, "revision", "Revision", "text");
+    await create_column(board_id, "status", "Status", "status");
+    await create_column(board_id, "cr_status", "CR Status", "status");
+    await create_column(board_id, "print_status", "Print Status", "status");
+    await create_column(board_id, "prog_status", "Program Status", "status");
+    await create_column(board_id, "qualdoc_status", "Qual Docs Status", "status");
+    await create_column(board_id, "released_prod", "Released to Prod", "status");
+}
+
 (async () => {
     // await createOpenJobColumns(1294186867);
     // await createNoJobColumns(5252735219);
@@ -153,6 +165,7 @@ const createOpenServiceColumns = async (board_id) => {
     // await createNbhColumns(5338470037);
     // await createGanttColumns(5343813711);
     // await createWorkActColumns(5382069579);
-    await createBookedOrdersColumns(5443787468);
-    await createOpenServiceColumns(5443446010);
+    // await createBookedOrdersColumns(5443787468);
+    // await createOpenServiceColumns(5443446010);
+    await createContractReviewColumns(5450393284);
 })();

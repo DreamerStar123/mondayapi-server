@@ -93,6 +93,7 @@ const createNbhColumns = async (board_id) => {
     await create_column(board_id, "est_qty", "Est Qty", "numbers");
     await create_column(board_id, "act_qty", "Act Qty", "numbers");
     await create_column(board_id, "delta", "Delta", "numbers");
+    await create_column(board_id, "onhand_qty", "On_Hand_Qty", "numbers");
 }
 
 const createGanttColumns = async (board_id) => {
@@ -164,10 +165,10 @@ const createContractReviewColumns = async (board_id) => {
     // await createOpenMachineColumns(5293870025);
     // await createNbrColumns(5333111913);
     // await createNbsColumns(5340444856);
-    // await createNbhColumns(5338470037);
+    await createNbhColumns(5338470037);
     // await createGanttColumns(5343813711);
     // await createWorkActColumns(5382069579);
     // await createBookedOrdersColumns(5443787468);
     // await createOpenServiceColumns(5443446010);
-    await createContractReviewColumns(5450393284);
+    // await createContractReviewColumns(5450393284);
 })();

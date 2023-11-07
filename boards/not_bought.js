@@ -258,6 +258,7 @@ module.exports.updateNbh = async (board_id, proxy, logger) => {
         ["est_qty", "Est_Qty"],
         ["act_qty", "Act_Qty"],
         ["delta", "Delta"],
+        ["onhand_qty", "On_Hand_Qty"],
     ];
 
     let updatedCount = 0;
@@ -298,6 +299,7 @@ module.exports.updateNbh = async (board_id, proxy, logger) => {
                         est_qty: record.Est_Qty,
                         act_qty: record.Act_Qty,
                         delta: record.Delta,
+                        onhand_qty: record.On_Hand_Qty,
                     };
                     // console.log(item, record);
                     await monday.change_multiple_column_values(item.id, board_id, column_values);

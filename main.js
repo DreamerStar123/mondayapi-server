@@ -7,6 +7,7 @@ const not_bought = require('./boards/not_bought');
 const gantt = require('./boards/gantt');
 const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
+const contract_review = require('./boards/contract_review');
 const winston = require("winston");
 
 module.exports.snapshot = async () => {

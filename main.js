@@ -7,7 +7,7 @@ const not_bought = require('./boards/not_bought');
 const gantt = require('./boards/gantt');
 const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
-const contract_review = require('./boards/contract_review');
+// const contract_review = require('./boards/contract_review');
 const winston = require("winston");
 
 module.exports.snapshot = async () => {
@@ -65,7 +65,7 @@ module.exports.main = async () => {
     await gantt.updateGantt(ganttBoardId, proxy, logger);
     await booked_orders.update(bookedOrdersBoardId, proxy, logger);
     await open_service.updateOpenService(openServiceBoardId, proxy, logger);
-    await contract_review.update(contractReviewBoardId, logger);
+    // await contract_review.update(contractReviewBoardId, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

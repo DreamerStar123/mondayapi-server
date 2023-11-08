@@ -7,8 +7,11 @@ const mssql_query = require('../modules/mssql_query');
 const {
     getSOStatus
 } = require('../modules/status_code');
+const {
+    dateString
+} = require('../modules/utils');
 
-const getColumnValues = (record, rsun) => {
+function getColumnValues(record, rsun) {
     const column_values = {
         so_line: record.SO_Line,
         order_date: record.Order_Date,
@@ -41,7 +44,7 @@ const updateGroup = async (board_id, sun_rs, recordset, logger) => {
         let rsun = sun_rs.find(rsun => {
             return record.Sales_Order === rsun.Sales_Order && record.SO_Line === rsun.SO_Line;
         });
-        if (rsun && (record.Promised_Date != rsun.Promised_Date || record.Order_Qty != rsun.Order_Qty)) {
+        if (rsun && (dateString(record.Promised_Date) != rsun.Promised_Date || record.Order_Qty != rsun.Order_Qty)) {
             const item_name = `${record.Sales_Order} (${record.Material})`;
             await monday.create_item(board_id, item_name, getColumnValues(record, rsun));
             newCount++;

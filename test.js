@@ -8,7 +8,7 @@ const gantt = require('./boards/gantt');
 const work_act = require('./boards/work_act');
 const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
-const contract_review = require('./boards/contract_review');
+// const contract_review = require('./boards/contract_review');
 const winston = require("winston");
 
 const logger = winston.createLogger({

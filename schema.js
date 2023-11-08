@@ -87,12 +87,8 @@ const createNbhColumns = async (board_id) => {
     await create_column(board_id, "material", "Material", "text");
     await create_column(board_id, "due_date", "Due Date", "date");
     await create_column(board_id, "mat_desc", "Mat_Desc", "text");
-    await create_column(board_id, "job_desc", "Job_Desc", "text");
-    await create_column(board_id, "pick_buy", "Pick Buy Indicator", "text");
     await create_column(board_id, "status", "Status", "status");
     await create_column(board_id, "est_qty", "Est Qty", "numbers");
-    await create_column(board_id, "act_qty", "Act Qty", "numbers");
-    await create_column(board_id, "delta", "Delta", "numbers");
     await create_column(board_id, "onhand_qty", "On_Hand_Qty", "numbers");
 }
 

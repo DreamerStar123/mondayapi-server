@@ -252,12 +252,8 @@ module.exports.updateNbh = async (board_id, proxy, logger) => {
         // ["material", "Material"],
         ["due_date", "Promised_Date"],
         ["mat_desc", "Mat_Desc"],
-        ["job_desc", "Job_Desc"],
-        ["pick_buy", "Pick_Buy_Indicator"],
         ["status", "Status"],
         ["est_qty", "Est_Qty"],
-        ["act_qty", "Act_Qty"],
-        ["delta", "Delta"],
         ["onhand_qty", "On_Hand_Qty"],
     ];
 
@@ -293,12 +289,8 @@ module.exports.updateNbh = async (board_id, proxy, logger) => {
                         // material: record.Material,
                         due_date: record.Promised_Date,
                         mat_desc: record.Mat_Desc,
-                        job_desc: record.Job_Desc,
-                        pick_buy: record.Pick_Buy_Indicator,
                         status: getJobStatus(record.Status),
                         est_qty: record.Est_Qty,
-                        act_qty: record.Act_Qty,
-                        delta: record.Delta,
                         onhand_qty: record.On_Hand_Qty,
                     };
                     // console.log(item, record);
@@ -333,12 +325,8 @@ module.exports.updateNbh = async (board_id, proxy, logger) => {
                 // material: record.Material,
                 due_date: record.Promised_Date,
                 mat_desc: record.Mat_Desc,
-                job_desc: record.Job_Desc,
-                pick_buy: record.Pick_Buy_Indicator,
                 status: getJobStatus(record.Status),
                 est_qty: record.Est_Qty,
-                act_qty: record.Act_Qty,
-                delta: record.Delta,
                 onhand_qty: record.On_Hand_Qty,
             };
             await monday.create_item(board_id, item_name, column_values, group.id);

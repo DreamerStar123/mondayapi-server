@@ -78,8 +78,8 @@ module.exports.update = async (board_id, proxy, logger) => {
     await updateGroup(board_id, sun_rs, recordset, logger);
 }
 
-module.exports.snapshot = async (board_id, proxy, logger) => {
-    logger.info(`=====> booked_orders.snapshot(${board_id})`);
+module.exports.snapshot = async (proxy, logger) => {
+    logger.info(`=====> booked_orders.snapshot()`);
     const query = fs.readFileSync('query/8-booked_orders.sql', 'utf-8');
     let recordset;
     if (proxy)

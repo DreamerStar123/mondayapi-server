@@ -7,13 +7,35 @@ const not_bought = require('./boards/not_bought');
 const gantt = require('./boards/gantt');
 const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
+const work_act = require('./boards/work_act');
 // const contract_review = require('./boards/contract_review');
 const winston = require("winston");
 
-module.exports.snapshot = async () => {
+module.exports.onQuarter = async () => {
     const logger = winston.createLogger({
         transports: [new winston.transports.File({
-            filename: 'logs/logs-snapshot.txt'
+            filename: 'logs/logs-work.txt'
+        }), new winston.transports.Console]
+    });
+    
+    logger.info(`============================== ${new Date().toISOString()} ==============================`);
+    let startTime = performance.now();
+
+    const machineStatusBoardId = 5240959201;
+    const workActBoardId = 5382069579;
+
+    const proxy = false;
+
+    await work_act.updateWorkAct(workActBoardId, machineStatusBoardId, proxy, logger);
+
+    const seconds = (performance.now() - startTime) / 1000;
+    logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);
+}
+
+module.exports.onSunday = async () => {
+    const logger = winston.createLogger({
+        transports: [new winston.transports.File({
+            filename: 'logs/logs-sunday.txt'
         }), new winston.transports.Console]
     });
 
@@ -23,7 +45,8 @@ module.exports.snapshot = async () => {
     const bookedOrdersBoardId = 5443787468;
     const proxy = false;
 
-    await booked_orders.snapshot(bookedOrdersBoardId, proxy, logger);
+    await booked_orders.update(bookedOrdersBoardId, proxy, logger);
+    await booked_orders.snapshot(proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);
@@ -48,7 +71,6 @@ module.exports.main = async () => {
     const nbsBoardId = 5340444856;
     const nbhBoardId = 5338470037;
     const ganttBoardId = 5343813711;
-    const bookedOrdersBoardId = 5443787468;
     const openServiceBoardId = 5443446010;
     const contractReviewBoardId = 5450393284;
 
@@ -63,7 +85,6 @@ module.exports.main = async () => {
     await not_bought.updateNbs(nbsBoardId, proxy, logger);
     await not_bought.updateNbh(nbhBoardId, proxy, logger);
     await gantt.updateGantt(ganttBoardId, proxy, logger);
-    await booked_orders.update(bookedOrdersBoardId, proxy, logger);
     await open_service.updateOpenService(openServiceBoardId, proxy, logger);
     // await contract_review.update(contractReviewBoardId, logger);
 

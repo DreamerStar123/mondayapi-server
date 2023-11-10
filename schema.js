@@ -15,8 +15,9 @@ const createOpenJobColumns = async (board_id) => {
 }
 
 const createNoJobColumns = async (board_id) => {
-    await create_column(board_id, "ship_date", "Ship Date", "date");
+    // await create_column(board_id, "ship_date", "Ship Date", "date");
     await create_column(board_id, "due_date", "Due Date", "date");
+    await create_column(board_id, "part_number", "Part Number", "text");
     await create_column(board_id, "so_line", "SO_Line", "text");
     await create_column(board_id, "status", "Status", "status");
     await create_column(board_id, "order_qty", "Order_Qty", "numbers");
@@ -155,13 +156,13 @@ const createContractReviewColumns = async (board_id) => {
 
 (async () => {
     // await createOpenJobColumns(1294186867);
-    // await createNoJobColumns(5252735219);
+    await createNoJobColumns(5252735219);
     // await createMachineStatusColumns(1294186963);
     // await createMatOrderColumns(5293869955);
     // await createOpenMachineColumns(5293870025);
     // await createNbrColumns(5333111913);
     // await createNbsColumns(5340444856);
-    await createNbhColumns(5338470037);
+    // await createNbhColumns(5338470037);
     // await createGanttColumns(5343813711);
     // await createWorkActColumns(5382069579);
     // await createBookedOrdersColumns(5443787468);

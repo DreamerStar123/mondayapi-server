@@ -5,8 +5,11 @@ const analysis = require('../modules/analysis');
 const mssql_query = require('../modules/mssql_query');
 const {
     getSOStatus,
-    getShipDate
 } = require('../modules/status_code');
+const {
+    getShipDate,
+    checkAfterYesterday
+} = require('../modules/utils');
 
 const getColumnValues_Open = (record) => {
     let dueDate = new Date(record.Promised_Date);
@@ -43,6 +46,7 @@ const getColumnValues_No = (record) => {
         shipped_qty: record.Shipped_Qty,
         open_qty: record.Open_Qty,
         hand_qty: record.On_Hand_Qty,
+        part_number: record.Material,
     };
     return column_values;
 }
@@ -111,28 +115,12 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        // Set yesterday's date by subtracting 1 day from the current date in EDT
-        var yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        yesterday.setHours(0, 0, 0, 0); // Set the time to midnight in EDT
-        yesterday.toLocaleString("en-US", {
-            timeZone: "America/New_York"
-        });
-
-        // Assuming the given date is stored in a variable called 'givenDate'
-        var givenDate = new Date(record.Last_Updated); // Replace with your own given date
-        givenDate.setHours(0, 0, 0, 0); // Set the time to midnight in UTC
-        givenDate.toLocaleString("en-US", {
-            timeZone: "America/New_York"
-        });
-
-        if (givenDate >= yesterday) {
-            if ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
-                record.SO_Status === 'Backorder') {
-                const item_name = `${record.Job} (${record.Part_Number})`;
-                await monday.create_item(board_id, item_name, getColumnValues_Open(record));
-                newCount++;
-            }
+        if (checkAfterYesterday(record.Last_Updated) &&
+            ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
+                record.SO_Status === 'Backorder')) {
+            const item_name = `${record.Job} (${record.Part_Number})`;
+            await monday.create_item(board_id, item_name, getColumnValues_Open(record));
+            newCount++;
         }
     }
     logger.info(`${newCount}/${recordset.length} items created`);
@@ -165,10 +153,10 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
         ["open_qty", "Open_Qty"],
         ["status", "Status"],
         ["hand_qty", "On_Hand_Qty"],
+        ["part_number", "Material"],
     ];
 
     let updatedCount = 0;
-    let deletedCount = 0;
     let matchCount = 0;
     for (const item of items) {
         let index = recordset.findIndex(record => {
@@ -182,9 +170,6 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
         if (index !== -1) {
             recordset.splice(index, 1);
             matchCount++;
-        } else {
-            await monday.delete_item(item.id);
-            deletedCount++;
         }
         if (record && !analysis.compareFields(item, record, fieldMatch)) {
             // console.log(item, record);
@@ -193,14 +178,17 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
         }
     }
     logger.info(`${updatedCount}/${items.length} items updated`);
-    logger.info(`${deletedCount}/${items.length} items deleted`);
 
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        const item_name = `${record.Sales_Order} (${record.Material})`;
-        await monday.create_item(board_id, item_name, getColumnValues_No(record));
-        newCount++;
+        if (record.Order_Qty - record.Shipped_Qty > 0 &&
+            (record.Status === 'Open' || record.Status === 'Backorder') &&
+            !record.Job) {
+            const item_name = `${record.Sales_Order} (${record.Material})`;
+            await monday.create_item(board_id, item_name, getColumnValues_No(record));
+            newCount++;
+        }
     }
     logger.info(`${newCount}/${recordset.length} items created`);
 }

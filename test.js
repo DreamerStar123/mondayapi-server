@@ -8,7 +8,7 @@ const gantt = require('./boards/gantt');
 const work_act = require('./boards/work_act');
 const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
-// const contract_review = require('./boards/contract_review');
+const contract_review = require('./boards/contract_review');
 const winston = require("winston");
 
 const logger = winston.createLogger({
@@ -47,10 +47,10 @@ const logger = winston.createLogger({
     // await not_bought.updateNbh(nbhBoardId, proxy, logger);
     // await gantt.updateGantt(ganttBoardId, proxy, logger);
     // await work_act.updateWorkAct(workActBoardId, machineStatusBoardId, proxy, logger);
-    await booked_orders.update(bookedOrdersBoardId, proxy, logger);
-    // await booked_orders.snapshot(bookedOrdersBoardId, proxy, logger);
+    // await booked_orders.update(bookedOrdersBoardId, proxy, logger);
+    // await booked_orders.snapshot(proxy, logger);
     // await open_service.updateOpenService(openServiceBoardId, proxy, logger);
-    // await contract_review.update(contractReviewBoardId, logger);
+    await contract_review.update(contractReviewBoardId, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

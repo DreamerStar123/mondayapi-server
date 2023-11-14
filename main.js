@@ -21,12 +21,11 @@ module.exports.onQuarter = async () => {
     logger.info(`============================== ${new Date().toISOString()} ==============================`);
     let startTime = performance.now();
 
-    const machineStatusBoardId = 5240959201;
     const workActBoardId = 5382069579;
 
     const proxy = false;
 
-    await work_act.updateWorkAct(workActBoardId, machineStatusBoardId, proxy, logger);
+    await work_act.updateWorkAct(workActBoardId, proxy, logger);
 
     const seconds = (performance.now() - startTime) / 1000;
     logger.info(`****************************** Elapsed time: ${seconds} seconds. ******************************`);

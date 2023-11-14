@@ -99,11 +99,11 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
         } else {
             console.log(`${item.name} doesn't match`);
         }
-        if (record && !analysis.compareFields(item, record, fieldMatch)) {
-            if (record.SO_Status === 'Shipped') {
+        if (record) {
+            if (record.Customer.toLowerCase() === 'enteg' || record.SO_Status === 'Shipped') {
                 await monday.delete_item(item.id);
                 deletedCount++;
-            } else {
+            } else if (!analysis.compareFields(item, record, fieldMatch)) {
                 await monday.change_multiple_column_values(item.id, board_id, getColumnValues_Open(record));
                 updatedCount++;
             }
@@ -116,6 +116,7 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
     let newCount = 0;
     for (const record of recordset) {
         if (checkAfterYesterday(record.Last_Updated) &&
+            record.Customer.toLowerCase() !== 'enteg' &&
             ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
                 record.SO_Status === 'Backorder')) {
             const item_name = `${record.Job} (${record.Part_Number})`;

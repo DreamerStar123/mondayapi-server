@@ -9,11 +9,13 @@ SELECT
     dbo.Job.Part_Number,
     dbo.SO_Detail.Order_Qty - dbo.SO_Detail.Shipped_Qty AS Open_Qty,
     dbo.Job.Status AS Job_Status,
+    dbo.SO_Header.Customer,
     dbo.SO_Detail.Last_Updated
 FROM
     dbo.SO_Detail
+    LEFT JOIN dbo.SO_Header ON dbo.SO_Detail.Sales_Order = dbo.SO_Header.Sales_Order
     INNER JOIN dbo.Job ON dbo.SO_Detail.Job = dbo.Job.Job
 -- WHERE
-    -- CAST(dbo.SO_Detail.Last_Updated AS DATE) >= CAST(GETDATE() - 1 AS DATE)
+--     dbo.SO_Header.Customer != 'enteg'
 ORDER BY
     dbo.SO_Detail.Promised_Date;

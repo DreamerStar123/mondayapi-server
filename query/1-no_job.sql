@@ -13,7 +13,7 @@ FROM
     dbo.SO_Detail
     LEFT JOIN dbo.Material_Location ON dbo.SO_Detail.Material = dbo.Material_Location.Material
 WHERE
-    CAST(dbo.SO_Detail.Last_Updated AS DATE) >= CAST(GETDATE() - 1 AS DATE)
+    CAST(dbo.SO_Detail.Last_Updated AS DATE) >= CAST(GETDATE() AS DATE)
 ORDER BY
     dbo.SO_Detail.Promised_Date,
     dbo.SO_Detail.Sales_Order,

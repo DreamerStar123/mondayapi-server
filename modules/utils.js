@@ -28,3 +28,22 @@ module.exports.checkAfterYesterday = (date) => {
 
     return givenDate >= yesterday;
 }
+
+module.exports.checkToday = (date) => {
+    // Set today's date from the current date in EDT
+    var today = new Date();
+    today.setDate(today.getDate());
+    today.setHours(0, 0, 0, 0); // Set the time to midnight in EDT
+    today.toLocaleString("en-US", {
+        timeZone: "America/New_York"
+    });
+
+    // Assuming the given date is stored in a variable called 'givenDate'
+    var givenDate = new Date(date); // Replace with your own given date
+    givenDate.setHours(0, 0, 0, 0); // Set the time to midnight in UTC
+    givenDate.toLocaleString("en-US", {
+        timeZone: "America/New_York"
+    });
+
+    return givenDate >= today;
+}

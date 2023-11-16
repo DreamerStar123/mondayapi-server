@@ -8,7 +8,7 @@ const {
 } = require('../modules/status_code');
 const {
     getShipDate,
-    checkAfterYesterday
+    checkToday
 } = require('../modules/utils');
 
 const getColumnValues_Open = (record) => {
@@ -115,7 +115,7 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        if (checkAfterYesterday(record.Last_Updated) &&
+        if (checkToday(record.Last_Updated) &&
             record.Customer.toLowerCase() !== 'enteg' &&
             ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
                 record.SO_Status === 'Backorder')) {

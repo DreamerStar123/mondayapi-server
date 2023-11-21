@@ -21,19 +21,18 @@ FROM
         LEFT JOIN dbo.PO_Detail ON dbo.Source.PO_Detail = dbo.PO_Detail.PO_Detail
     ) ON dbo.Job.Job = dbo.Job_Operation.Job
 WHERE
-    (
-        ((dbo.Job.Job) Not Like 't*')
-        AND (
-            dbo.Job_Operation.Vendor = 'T&TAN'
-            OR dbo.Job_Operation.Vendor = 'A&GCE'
-            OR dbo.Job_Operation.Vendor = 'ACCUR'
-            OR dbo.Job_Operation.Vendor = 'COATI'
-            OR dbo.Job_Operation.Vendor = 'CILIN'
-            OR dbo.Job_Operation.Vendor = 'ACCUG'
-            OR dbo.Job_Operation.Vendor = 'NEWME'
-        )
-        AND (dbo.PO_Detail.PO Is Not Null)
-        AND (dbo.PO_Detail.Status = 'OPEN')
+    dbo.Job.Job NOT LIKE 't*'
+    AND (
+        dbo.Job_Operation.Vendor = 'T&TAN'
+        OR dbo.Job_Operation.Vendor = 'A&GCE'
+        OR dbo.Job_Operation.Vendor = 'ACCUR'
+        OR dbo.Job_Operation.Vendor = 'COATI'
+        OR dbo.Job_Operation.Vendor = 'CILIN'
+        OR dbo.Job_Operation.Vendor = 'ACCUG'
+        OR dbo.Job_Operation.Vendor = 'NEWME'
     )
+    AND dbo.PO_Detail.PO IS NOT NULL
+    AND dbo.PO_Detail.Status = 'OPEN'
+    AND dbo.Source.POOrdered_Qty > dbo.Source.Act_Qty
 ORDER BY
     dbo.Source.Due_Date;

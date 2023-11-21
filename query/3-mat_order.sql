@@ -21,6 +21,7 @@ WHERE
 	AND Job.Job NOT LIKE 'T%'
 	AND PO_Detail.PO_Type = 0
 	AND PO_Detail.Status <> 'Closed'
+	AND PO_Detail.Order_Quantity > Material_Req.Act_Qty
 ORDER BY
 	Job.Job,
 	PO_Detail.PO,

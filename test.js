@@ -40,14 +40,14 @@ const logger = winston.createLogger({
     // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
     // await open_job.updateNoJob(noJobBoardId, proxy, logger);
     // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
-    // await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
+    await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     // await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
     // await not_bought.updateNbr(nbrBoardId, proxy, logger);
     // await not_bought.updateNbs(nbsBoardId, proxy, logger);
     // await not_bought.updateNbh(nbhBoardId, proxy, logger);
     // await gantt.updateGantt(ganttBoardId, proxy, logger);
     // await work_act.updateWorkAct(workActBoardId, proxy, logger);
-    await booked_orders.update(bookedOrdersBoardId, proxy, logger);
+    // await booked_orders.update(bookedOrdersBoardId, proxy, logger);
     // await booked_orders.snapshot(proxy, logger);
     // await open_service.updateOpenService(openServiceBoardId, proxy, logger);
     // await contract_review.update(contractReviewBoardId, logger);

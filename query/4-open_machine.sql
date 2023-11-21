@@ -35,8 +35,8 @@ WHERE
 		OR dbo.Job_Operation.Vendor = 'marlb'
 		OR dbo.Job_Operation.Vendor = 'micrg'
 		OR dbo.Job_Operation.Vendor = 'KAGER'
-		OR dbo.Job_Operation.Vendor = 'FABCO'
 	)
 	AND PO_Detail.Status <> 'Closed'
+	AND dbo.PO_Detail.Order_Quantity > dbo.Source.Act_Qty
 ORDER BY
 	dbo.Job.Job

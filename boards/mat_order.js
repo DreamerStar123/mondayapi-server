@@ -68,25 +68,22 @@ module.exports.updateMatOrder = async (board_id, proxy, logger) => {
             matchCount++;
         }
         if (record) {
-            // console.log(item, record);
-            if (record.Order_Quantity > record.Act_Qty) {
-                if (!analysis.compareFields(item, record, fieldMatch)) {
-                    const column_values = {
-                        vendor: record.Vendor,
-                        po: record.PO,
-                        due_date: record.Due_Date,
-                        job_qty: record.Job_Qty,
-                        order_qty: record.Order_Quantity,
-                        act_qty: record.Act_Qty,
-                        issued_by: record.Issued_By,
-                    };
-                    await monday.change_multiple_column_values(item.id, board_id, column_values);
-                    updatedCount++;
-                }
-            } else {
-                await monday.delete_item(item.id);
-                deletedCount++;
+            if (!analysis.compareFields(item, record, fieldMatch)) {
+                const column_values = {
+                    vendor: record.Vendor,
+                    po: record.PO,
+                    due_date: record.Due_Date,
+                    job_qty: record.Job_Qty,
+                    order_qty: record.Order_Quantity,
+                    act_qty: record.Act_Qty,
+                    issued_by: record.Issued_By,
+                };
+                await monday.change_multiple_column_values(item.id, board_id, column_values);
+                updatedCount++;
             }
+        } else {
+            await monday.delete_item(item.id);
+            deletedCount++;
         }
     }
     logger.info(`${updatedCount}/${matchCount} items updated`);
@@ -95,23 +92,21 @@ module.exports.updateMatOrder = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of groupRecords) {
-        if (record.Order_Quantity > record.Act_Qty) {
-            const item_name = `${record.Job} (${record.Part_Number})`;
-            const column_values = {
-                vendor: record.Vendor,
-                po: record.PO,
-                due_date: record.Due_Date,
-                job_qty: record.Job_Qty,
-                order_qty: record.Order_Quantity,
-                act_qty: record.Act_Qty,
-                issued_by: record.Issued_By,
-            };
-            if (record.PO)
-                await monday.create_item(board_id, item_name, column_values, "ordered");
-            else
-                await monday.create_item(board_id, item_name, column_values, "unordered");
-            newCount++;
-        }
+        const item_name = `${record.Job} (${record.Part_Number})`;
+        const column_values = {
+            vendor: record.Vendor,
+            po: record.PO,
+            due_date: record.Due_Date,
+            job_qty: record.Job_Qty,
+            order_qty: record.Order_Quantity,
+            act_qty: record.Act_Qty,
+            issued_by: record.Issued_By,
+        };
+        if (record.PO)
+            await monday.create_item(board_id, item_name, column_values, "ordered");
+        else
+            await monday.create_item(board_id, item_name, column_values, "unordered");
+        newCount++;
     }
     logger.info(`${newCount}/${groupRecords.length} items created`);
 }

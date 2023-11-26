@@ -15,7 +15,5 @@ FROM
     dbo.SO_Detail
     LEFT JOIN dbo.SO_Header ON dbo.SO_Detail.Sales_Order = dbo.SO_Header.Sales_Order
     INNER JOIN dbo.Job ON dbo.SO_Detail.Job = dbo.Job.Job
--- WHERE
---     dbo.SO_Header.Customer != 'enteg'
 ORDER BY
     dbo.SO_Detail.Promised_Date;

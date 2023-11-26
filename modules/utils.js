@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports.dateString = (date) => {
     return date instanceof Date && date.toISOString() || date;
 }
@@ -46,4 +48,23 @@ module.exports.checkToday = (date) => {
     });
 
     return givenDate >= today;
+}
+
+module.exports.readJsonArray = filename => {
+    try {
+        const arr = JSON.parse(fs.readFileSync(filename));
+        return arr;
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+module.exports.writeJsonArray = (filename, arr) => {
+    try {
+        const text = JSON.stringify(arr);
+        fs.writeFileSync(filename, text);
+    } catch (error) {
+        console.log(error);
+    }
 }

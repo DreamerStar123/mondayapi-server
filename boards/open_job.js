@@ -8,7 +8,9 @@ const {
 } = require('../modules/status_code');
 const {
     getShipDate,
-    checkToday
+    checkToday,
+    readJsonArray,
+    writeJsonArray
 } = require('../modules/utils');
 
 const getColumnValues_Open = (record) => {
@@ -70,6 +72,9 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
         recordset = await mssql_query.getResultFromSQLServer(query);
     logger.info(`${recordset.length} records`);
 
+    let jobs = readJsonArray('data/1-open_job.json');
+    logger.info(`${jobs.length} jobs`);
+
     // analyze data
     const fieldMatch = [
         ["date4", "Promised_Date"],
@@ -103,9 +108,13 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
             if (record.Customer.toLowerCase() === 'enteg' || record.SO_Status === 'Shipped') {
                 await monday.delete_item(item.id);
                 deletedCount++;
-            } else if (!analysis.compareFields(item, record, fieldMatch)) {
-                await monday.change_multiple_column_values(item.id, board_id, getColumnValues_Open(record));
-                updatedCount++;
+            } else {
+                if (!analysis.compareFields(item, record, fieldMatch)) {
+                    await monday.change_multiple_column_values(item.id, board_id, getColumnValues_Open(record));
+                    updatedCount++;
+                }
+                if (!jobs.find(job => job.Job === record.Job))
+                    jobs.push(record);
             }
         }
     }
@@ -115,16 +124,22 @@ module.exports.updateOpenJob = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        if (checkToday(record.Last_Updated) &&
-            record.Customer.toLowerCase() !== 'enteg' &&
-            ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
-                record.SO_Status === 'Backorder')) {
-            const item_name = `${record.Job} (${record.Part_Number})`;
-            await monday.create_item(board_id, item_name, getColumnValues_Open(record));
-            newCount++;
+        if (!jobs.find(job => job.Job === record.Job)) {
+            if (checkToday(record.Last_Updated) &&
+                record.Customer.toLowerCase() !== 'enteg' &&
+                ((record.SO_Status === 'Open' && record.Order_Qty - record.Shipped_Qty !== 0 && record.Job_Status === 'Active') ||
+                    record.SO_Status === 'Backorder')) {
+                const item_name = `${record.Job} (${record.Part_Number})`;
+                jobs.push(record);
+                await monday.create_item(board_id, item_name, getColumnValues_Open(record));
+                newCount++;
+            }
         }
     }
     logger.info(`${newCount}/${recordset.length} items created`);
+
+    writeJsonArray('data/1-open_job.json', jobs);
+    logger.info(`${jobs.length} jobs saved so far`);
 }
 
 module.exports.updateNoJob = async (board_id, proxy, logger) => {
@@ -145,6 +160,9 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
     else
         recordset = await mssql_query.getResultFromSQLServer(query);
     logger.info(`${recordset.length} records`);
+
+    let orders = readJsonArray('data/1-no_job.json');
+    logger.info(`${orders.length} orders`);
 
     // analyze data
     const fieldMatch = [
@@ -172,10 +190,14 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
             recordset.splice(index, 1);
             matchCount++;
         }
-        if (record && !analysis.compareFields(item, record, fieldMatch)) {
-            // console.log(item, record);
-            await monday.change_multiple_column_values(item.id, board_id, getColumnValues_No(record));
-            updatedCount++;
+        if (record) {
+            if (!analysis.compareFields(item, record, fieldMatch)) {
+                // console.log(item, record);
+                await monday.change_multiple_column_values(item.id, board_id, getColumnValues_No(record));
+                updatedCount++;
+            }
+            if (!orders.find(order => order.Sales_Order === record.Sales_Order && order.SO_Line === record.SO_Line))
+                orders.push(record);
         }
     }
     logger.info(`${updatedCount}/${items.length} items updated`);
@@ -183,13 +205,18 @@ module.exports.updateNoJob = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        if (record.Order_Qty - record.Shipped_Qty > 0 &&
-            (record.Status === 'Open' || record.Status === 'Backorder') &&
-            !record.Job) {
-            const item_name = `${record.Sales_Order} (${record.Material})`;
-            await monday.create_item(board_id, item_name, getColumnValues_No(record));
-            newCount++;
+        if (!orders.find(order => order.Sales_Order === record.Sales_Order && order.SO_Line === record.SO_Line)) {
+            if (record.Order_Qty - record.Shipped_Qty > 0 &&
+                (record.Status === 'Open' || record.Status === 'Backorder') && !record.Job) {
+                const item_name = `${record.Sales_Order} (${record.Material})`;
+                orders.push(record);
+                await monday.create_item(board_id, item_name, getColumnValues_No(record));
+                newCount++;
+            }
         }
     }
     logger.info(`${newCount}/${recordset.length} items created`);
+
+    writeJsonArray('data/1-no_job.json', orders);
+    logger.info(`${orders.length} orders saved so far`);
 }

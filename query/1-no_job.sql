@@ -5,6 +5,7 @@ SELECT
     dbo.SO_Detail.Material,
     dbo.SO_Detail.Order_Qty,
     dbo.SO_Detail.Shipped_Qty,
+    dbo.SO_Detail.Job,
     dbo.Material_Location.On_Hand_Qty,
     dbo.SO_Detail.Order_Qty - dbo.SO_Detail.Shipped_Qty AS Open_Qty,
     dbo.SO_Detail.Status,

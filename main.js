@@ -8,6 +8,7 @@ const gantt = require('./boards/gantt');
 const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
 const work_act = require('./boards/work_act');
+const setup_queue = require('./boards/setup_queue');
 // const contract_review = require('./boards/contract_review');
 const winston = require("winston");
 
@@ -71,6 +72,7 @@ module.exports.main = async () => {
     const nbhBoardId = 5338470037;
     const ganttBoardId = 5343813711;
     const openServiceBoardId = 5443446010;
+    const setupQueueBoardId = 5350583392;
     const contractReviewBoardId = 5450393284;
 
     const proxy = false;
@@ -85,6 +87,7 @@ module.exports.main = async () => {
     await not_bought.updateNbh(nbhBoardId, proxy, logger);
     await gantt.updateGantt(ganttBoardId, proxy, logger);
     await open_service.updateOpenService(openServiceBoardId, proxy, logger);
+    await setup_queue.update(setupQueueBoardId, proxy, logger);
     // await contract_review.update(contractReviewBoardId, logger);
 
     const seconds = (performance.now() - startTime) / 1000;

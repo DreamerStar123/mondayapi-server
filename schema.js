@@ -154,9 +154,18 @@ const createContractReviewColumns = async (board_id) => {
     await create_column(board_id, "released_prod", "Released to Prod", "status");
 }
 
+const createSetupQueueColumns = async (board_id) => {
+    await create_column(board_id, "vendor", "VENDOR", "text");
+    await create_column(board_id, "po", "PO #", "text");
+    await create_column(board_id, "due_date", "PO Due Date", "date");
+    await create_column(board_id, "order_qty", "Material PO Qty", "numbers");
+    await create_column(board_id, "act_qty", "Material PO Rcvd", "numbers");
+    await create_column(board_id, "type", "Type", "text");
+}
+
 (async () => {
     // await createOpenJobColumns(1294186867);
-    await createNoJobColumns(5252735219);
+    // await createNoJobColumns(5252735219);
     // await createMachineStatusColumns(1294186963);
     // await createMatOrderColumns(5293869955);
     // await createOpenMachineColumns(5293870025);
@@ -168,4 +177,5 @@ const createContractReviewColumns = async (board_id) => {
     // await createBookedOrdersColumns(5443787468);
     // await createOpenServiceColumns(5443446010);
     // await createContractReviewColumns(5450393284);
+    await createSetupQueueColumns(5350583392);
 })();

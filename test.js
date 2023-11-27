@@ -8,6 +8,7 @@ const gantt = require('./boards/gantt');
 const work_act = require('./boards/work_act');
 const open_service = require('./boards/open_service');
 const booked_orders = require('./boards/booked_orders');
+const setup_queue = require('./boards/setup_queue');
 // const contract_review = require('./boards/contract_review');
 const winston = require("winston");
 
@@ -35,10 +36,11 @@ const logger = winston.createLogger({
     const workActBoardId = 5382069579;
     const bookedOrdersBoardId = 5443787468;
     const openServiceBoardId = 5443446010;
+    const setupQueueBoardId = 5350583392;
     const contractReviewBoardId = 5450393284;
-
-    await open_job.updateOpenJob(openJobBoardId, proxy, logger);
-    await open_job.updateNoJob(noJobBoardId, proxy, logger);
+    
+    // await open_job.updateOpenJob(openJobBoardId, proxy, logger);
+    // await open_job.updateNoJob(noJobBoardId, proxy, logger);
     // await machine_status.updateMachineStatus(machineStatusBoardId, proxy, logger);
     // await mat_order.updateMatOrder(rawMaterialOrdersBoardId, proxy, logger);
     // await open_machine.updateOpenMachine(openMachineBoardId, proxy, logger);
@@ -50,6 +52,7 @@ const logger = winston.createLogger({
     // await booked_orders.update(bookedOrdersBoardId, proxy, logger);
     // await booked_orders.snapshot(proxy, logger);
     // await open_service.updateOpenService(openServiceBoardId, proxy, logger);
+    await setup_queue.update(setupQueueBoardId, proxy, logger);
     // await contract_review.update(contractReviewBoardId, logger);
 
     const seconds = (performance.now() - startTime) / 1000;

@@ -13,6 +13,9 @@ const config = {
 
 module.exports.getResultFromSQLServer = async (query) => {
     try {
+        console.log("query test");
+        console.log(config);
+        console.log("----------------------");
         await sql.connect(config);
     } catch (error) {
         console.error('Failed to connect to SQL Server:', error);

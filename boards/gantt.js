@@ -81,7 +81,7 @@ module.exports.updateGantt = async (board_id, proxy, logger) => {
     // add new items
     let newCount = 0;
     for (const record of recordset) {
-        const item_name = (record.Job ? `${record.Job} (${record.Material || ''})` : 'No Job');
+        const item_name = (record.Job ? `${record.Job} (${record.Material || ''})` : `${record.Sales_Order} (${record.Material || ''})`);
         const column_values = {
             due_date: record.Promised_Date,
             customer: record.Customer,

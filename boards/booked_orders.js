@@ -68,6 +68,8 @@ module.exports.update = async (board_id, proxy, logger) => {
     const sun_rs = JSON.parse(fs.readFileSync('data/8-booked_orders.json', 'utf-8'));
     const query = fs.readFileSync('query/8-booked_orders.sql', 'utf-8');
     let recordset;
+        logger.info(proxy);
+
     if (proxy)
         recordset = await mssql_query.getResultFromProxyServer(query);
     else

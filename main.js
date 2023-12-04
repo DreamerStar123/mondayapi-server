@@ -42,7 +42,7 @@ module.exports.onSunday = async () => {
     logger.info(`============================== ${new Date().toISOString()} ==============================`);
     let startTime = performance.now();
 
-    const bookedOrdersBoardId = 5252735219;
+    const bookedOrdersBoardId = 5443787468;
     const proxy = false;
 
     await booked_orders.update(bookedOrdersBoardId, proxy, logger);

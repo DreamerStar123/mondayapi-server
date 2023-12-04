@@ -26,7 +26,9 @@ module.exports.getResultFromSQLServer = async (query) => {
 
     let result = [];
     try {
+        console.log("result--------")
         result = (await sql.query(query)).recordset;
+        console.log(result);
     } catch (error) {
         console.error('Error executing query:', error);
     }

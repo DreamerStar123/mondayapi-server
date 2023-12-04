@@ -44,7 +44,7 @@ const updateGroup = async (board_id, sun_rs, recordset, logger) => {
         let rsun = sun_rs.find(rsun => {
             return record.Sales_Order === rsun.Sales_Order && record.SO_Line === rsun.SO_Line;
         });
-        if (rsun && (dateString(record.Promised_Date) != rsun.Promised_Date || record.Order_Qty != rsun.Order_Qty)) 
+       // if (rsun && (dateString(record.Promised_Date) != rsun.Promised_Date || record.Order_Qty != rsun.Order_Qty)) 
         {
             const item_name = `${record.Sales_Order} (${record.Material})`;
             await monday.create_item(board_id, item_name, getColumnValues(record, rsun));

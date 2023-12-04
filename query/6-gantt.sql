@@ -1,5 +1,7 @@
 SELECT
     dbo.SO_Detail.Promised_Date,
+	dbo.SO_Detail.Sales_Order,
+    dbo.SO_Detail.Material,
     dbo.SO_Header.Customer,
     dbo.SO_Detail.Job,
     dbo.SO_Detail.Material,

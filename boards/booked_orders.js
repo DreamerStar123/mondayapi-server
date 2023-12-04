@@ -76,7 +76,7 @@ module.exports.update = async (board_id, proxy, logger) => {
         recordset = await mssql_query.getResultFromSQLServer(query);
     logger.info(`${sun_rs.length} sunday records`);
     logger.info(`${recordset.length} current records`);
-
+        console.log(recordset);
     await updateGroup(board_id, sun_rs, recordset, logger);
 }
 
